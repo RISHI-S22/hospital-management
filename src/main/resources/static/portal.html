@@ -4,123 +4,228 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hospital Management System | Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
-        body { background: #eef2f7; padding: 20px; color: #333; overflow-x: hidden; }
+        :root {
+            --primary: #0284c7;
+            --primary-hover: #0369a1;
+            --accent-green: #10b981;
+            --accent-green-hover: #059669;
+            --danger: #ef4444;
+            --danger-hover: #dc2626;
+            --bg-base: #f8fafc;
+            --surface: #ffffff;
+            --border: #e2e8f0;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --radius-md: 10px;
+            --radius-lg: 14px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -2px rgba(0,0,0,0.03);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, sans-serif; }
+        body { background: var(--bg-base); padding: 24px; color: var(--text-main); overflow-x: hidden; }
         
+        /* Top Dashboard Header */
         header { 
-            background: #0026ff; 
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); 
             color: white; 
-            padding: 16px 24px; 
+            padding: 16px 28px; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            border-radius: 8px; 
-            margin-bottom: 20px; 
+            border-radius: var(--radius-lg); 
+            margin-bottom: 24px; 
+            box-shadow: var(--shadow-md);
         }
-        .header-actions { display: flex; align-items: center; gap: 10px; }
-        .user-tag { background: rgba(255,255,255,0.2); padding: 7px 14px; border-radius: 4px; font-size: 14px; font-weight: bold; }
-        .btn-history-toggle { background: #ffc107; color: #000; border: none; padding: 8px 14px; border-radius: 4px; cursor: pointer; font-weight: bold; }
-        .btn-out { background: #dc3545; color: white; border: none; padding: 8px 14px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        header h1 { font-size: 19px; font-weight: 700; letter-spacing: -0.3px; }
+        .header-actions { display: flex; align-items: center; gap: 12px; }
+        .user-tag { 
+            background: rgba(255,255,255,0.08); 
+            border: 1px solid rgba(255,255,255,0.15); 
+            padding: 7px 14px; 
+            border-radius: var(--radius-md); 
+            font-size: 13px; 
+            font-weight: 600; 
+        }
+        .btn-history-toggle { 
+            background: #f59e0b; 
+            color: #0f172a; 
+            border: none; 
+            padding: 8px 14px; 
+            border-radius: var(--radius-md); 
+            cursor: pointer; 
+            font-weight: 700; 
+            font-size: 13px;
+            transition: opacity 0.2s;
+        }
+        .btn-history-toggle:hover { opacity: 0.9; }
+        .btn-out { 
+            background: rgba(239, 68, 68, 0.15); 
+            border: 1px solid rgba(239, 68, 68, 0.3); 
+            color: #fca5a5; 
+            padding: 8px 14px; 
+            border-radius: var(--radius-md); 
+            cursor: pointer; 
+            font-weight: 600; 
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        .btn-out:hover { background: var(--danger); color: #fff; }
         
         .view-panel { display: none; }
-        .card { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 1px 6px rgba(0,0,0,0.08); }
-        h2 { color: #0026ff; margin-bottom: 12px; border-bottom: 2px solid #eef2f7; padding-bottom: 6px; font-size: 18px; }
+        .card { 
+            background: var(--surface); 
+            padding: 24px; 
+            border-radius: var(--radius-lg); 
+            margin-bottom: 24px; 
+            box-shadow: var(--shadow-sm); 
+            border: 1px solid var(--border);
+        }
+        h2 { 
+            color: var(--text-main); 
+            margin-bottom: 14px; 
+            font-size: 17px; 
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
         
-        label { display: block; font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 4px; margin-top: 8px; }
-        input, select, textarea { width: 100%; padding: 10px; margin: 4px 0 10px 0; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; outline: none; }
-        input:focus, select:focus, textarea:focus { border-color: #0026ff; }
+        label { display: block; font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 4px; margin-top: 10px; }
+        input, select, textarea { 
+            width: 100%; 
+            padding: 10px 12px; 
+            margin: 4px 0 10px 0; 
+            border: 1px solid var(--border); 
+            border-radius: var(--radius-md); 
+            font-size: 13px; 
+            outline: none; 
+            color: var(--text-main);
+            background: #ffffff;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+        input:focus, select:focus, textarea:focus { 
+            border-color: var(--primary); 
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12);
+        }
         
-        button.action { background: #28a745; color: white; border: none; padding: 10px 16px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 8px; }
-        button.action:hover { opacity: 0.9; }
-        button.secondary-btn { background: #2563eb; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 4px; }
-        button.secondary-btn:hover { background: #1d4ed8; }
+        button.action { 
+            background: var(--accent-green); 
+            color: white; 
+            border: none; 
+            padding: 11px 16px; 
+            border-radius: var(--radius-md); 
+            cursor: pointer; 
+            font-weight: 600; 
+            font-size: 13px;
+            width: 100%; 
+            margin-top: 8px; 
+            transition: all 0.2s;
+        }
+        button.action:hover { background: var(--accent-green-hover); }
+        button.secondary-btn { 
+            background: var(--primary); 
+            color: white; 
+            border: none; 
+            padding: 9px 12px; 
+            border-radius: var(--radius-md); 
+            cursor: pointer; 
+            font-weight: 600; 
+            font-size: 13px;
+            width: 100%; 
+            margin-top: 4px; 
+            transition: all 0.2s;
+        }
+        button.secondary-btn:hover { background: var(--primary-hover); }
 
-        .grid { display: grid; grid-template-columns: 420px 1fr; gap: 20px; }
-        @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+        .grid { display: grid; grid-template-columns: 420px 1fr; gap: 24px; }
+        @media (max-width: 950px) { .grid { grid-template-columns: 1fr; } }
 
         /* Contained Scrollable Tables */
-        .search-bar-wrap { position: relative; margin-bottom: 10px; }
-        .search-bar-wrap input { margin: 0; padding: 9px 12px; border: 1px solid #0026ff; border-radius: 4px; }
+        .search-bar-wrap { position: relative; margin-bottom: 12px; }
+        .search-bar-wrap input { margin: 0; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius-md); }
         .table-scroll-box {
             max-height: 280px;
             overflow-y: auto;
-            border: 1px solid #e1e4e8;
-            border-radius: 6px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
         }
         table { width: 100%; border-collapse: collapse; }
-        th, td { border-bottom: 1px solid #e1e4e8; padding: 8px 10px; text-align: left; font-size: 13px; }
-        th { background: #0026ff; color: white; position: sticky; top: 0; z-index: 2; }
+        th, td { border-bottom: 1px solid var(--border); padding: 10px 12px; text-align: left; font-size: 13px; }
+        th { background: #f8fafc; color: #475569; font-weight: 600; position: sticky; top: 0; z-index: 2; border-bottom: 1px solid #cbd5e1; }
         tr:hover { background-color: #f8fafc; }
 
         /* Status Badges */
-        .badge { padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 12px; display: inline-block; }
-        .badge-pending { background: #fef08a; color: #854d0e; }
-        .badge-done { background: #bbf7d0; color: #166534; }
-        .badge-prescription { background: #dbeafe; color: #1e40af; }
-        .badge-patientorder { background: #f3e8ff; color: #6b21a8; }
+        .badge { padding: 4px 8px; border-radius: 6px; font-weight: 600; font-size: 11px; display: inline-block; }
+        .badge-pending { background: #fef9c3; color: #854d0e; }
+        .badge-done { background: #dcfce7; color: #15803d; }
+        .badge-prescription { background: #e0f2fe; color: #0369a1; }
+        .badge-patientorder { background: #f3e8ff; color: #7e22ce; }
 
-        /* Prescription Staging Box */
         .staging-box {
             background: #f8fafc;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px;
             margin-top: 10px;
         }
-        .staging-box h4 { font-size: 13px; color: #0026ff; margin-bottom: 6px; }
+        .staging-box h4 { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        /* Clinical Report Sheet Styling */
         .report-sheet {
             background: #ffffff;
-            border: 2px solid #0026ff;
-            border-radius: 8px;
-            padding: 24px;
+            border: 1px solid #cbd5e1;
+            border-radius: var(--radius-md);
+            padding: 28px;
             margin-top: 15px;
         }
         .report-header {
             display: flex;
             justify-content: space-between;
-            border-bottom: 2px dashed #cbd5e1;
-            padding-bottom: 12px;
-            margin-bottom: 16px;
+            border-bottom: 1px dashed #cbd5e1;
+            padding-bottom: 14px;
+            margin-bottom: 18px;
         }
-        .report-section { margin-bottom: 16px; }
-        .report-section h3 { color: #0026ff; font-size: 15px; margin-bottom: 6px; }
+        .report-section { margin-bottom: 18px; }
+        .report-section h3 { color: #0369a1; font-size: 14px; font-weight: 700; margin-bottom: 8px; }
 
-        /* Side History Drawer */
         .drawer-overlay {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0,0,0,0.45);
+            background: rgba(15, 23, 42, 0.45);
+            backdrop-filter: blur(2px);
             z-index: 1000;
         }
         .drawer {
             position: fixed;
             top: 0; right: -480px; width: 460px; height: 100vh;
             background: #fff;
-            box-shadow: -4px 0 15px rgba(0,0,0,0.15);
+            box-shadow: -4px 0 20px rgba(0,0,0,0.1);
             z-index: 1001;
-            transition: right 0.3s ease;
+            transition: right 0.25s ease-out;
             display: flex;
             flex-direction: column;
             padding: 24px;
             overflow-y: auto;
         }
         .drawer.open { right: 0; }
-        .drawer-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eef2f7; padding-bottom: 12px; margin-bottom: 15px; }
-        .drawer-header h3 { color: #0026ff; font-size: 20px; }
-        .btn-close-drawer { background: none; border: none; font-size: 24px; cursor: pointer; color: #888; }
-        .history-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; margin-bottom: 12px; }
-        .history-card h4 { color: #1e293b; margin-bottom: 4px; font-size: 14px; }
-        .history-card p { font-size: 12px; color: #475569; margin: 2px 0; }
+        .drawer-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 16px; }
+        .drawer-header h3 { color: var(--text-main); font-size: 18px; font-weight: 700; }
+        .btn-close-drawer { background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text-muted); }
+        .history-card { background: #f8fafc; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 14px; margin-bottom: 12px; }
+        .history-card h4 { color: #0f172a; margin-bottom: 4px; font-size: 13px; font-weight: 700; }
+        .history-card p { font-size: 12px; color: var(--text-muted); margin: 3px 0; }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>Hospital Management System</h1>
+    <h1>Metropolitan Hospital System</h1>
     <div class="header-actions">
         <button id="btnPatientHistory" class="btn-history-toggle" style="display:none;" onclick="openDrawer()">Patient History</button>
         <span id="roleLabel" class="user-tag">User</span>
@@ -131,26 +236,26 @@
 <!-- ================= PATIENT VIEW ================= -->
 <div id="view-PATIENT" class="view-panel">
     <div class="card">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h2>Comprehensive Medical & Prescription Report</h2>
-            <button onclick="window.print()" style="background:#0026ff; color:#fff; border:none; padding:6px 14px; border-radius:4px; cursor:pointer; font-weight:bold;">Print / Save Report</button>
-        </div>
+        <h2>
+            Comprehensive Medical & Prescription Report
+            <button onclick="window.print()" style="background:#f1f5f9; color:#0f172a; border:1px solid #cbd5e1; padding:6px 14px; border-radius:6px; cursor:pointer; font-weight:600; font-size:12px;">Print / Save Report</button>
+        </h2>
         
         <div class="report-sheet" id="patientMedicalReport">
             <div class="report-header">
                 <div>
-                    <h2 style="border:none; margin:0; color:#0026ff;">METROPOLITAN HOSPITAL MEDICAL REPORT</h2>
-                    <p style="font-size:12px; color:#64748b;">Clinical Summary & Pharmacy Fulfillment Ledger</p>
+                    <h3 style="margin:0; font-size:16px; color:#0f172a;">METROPOLITAN HOSPITAL MEDICAL REPORT</h3>
+                    <p style="font-size:12px; color:#64748b; margin-top:2px;">Clinical Summary & Pharmacy Fulfillment Ledger</p>
                 </div>
                 <div style="text-align:right;">
-                    <p id="repDate" style="font-weight:bold; font-size:13px;"></p>
-                    <p id="repId" style="font-size:13px; color:#0026ff;"></p>
+                    <p id="repDate" style="font-weight:600; font-size:12px; color:#475569;"></p>
+                    <p id="repId" style="font-size:12px; color:#0284c7; font-weight:700; margin-top:2px;"></p>
                 </div>
             </div>
 
             <div class="report-section" id="repPatientDetails">
                 <h3>1. Patient Admission Profile</h3>
-                <p>Loading patient demographic details...</p>
+                <p style="font-size:13px; color:#64748b;">Loading patient demographic details...</p>
             </div>
 
             <div class="report-section">
@@ -200,7 +305,7 @@
             </div>
 
             <div class="card">
-                <h2>Order Extra Medicines from Pharmacy</h2>
+                <h2>Order Extra Medicines</h2>
                 <label>Select In-Stock Medicine:</label>
                 <select id="ptMedSelect"></select>
                 <label>Quantity:</label>
@@ -228,14 +333,13 @@
 <!-- ================= DOCTOR VIEW ================= -->
 <div id="view-DOCTOR" class="view-panel">
     <div class="grid">
-        <!-- Left: Prescribe Multiple Medications & Nurse Assignment -->
         <div>
             <div class="card">
                 <h2>Prescribe Medication (Multi-Medicine)</h2>
                 <label>Select Booked Patient:</label>
                 <select id="rxPatientSelect" onchange="syncRxPatient()"></select>
                 
-                <div style="border: 1px dashed #2563eb; padding: 12px; border-radius: 6px; background: #f8fafc; margin-top: 8px;">
+                <div style="border: 1px dashed #cbd5e1; padding: 14px; border-radius: var(--radius-md); background: #f8fafc; margin-top: 10px;">
                     <label>Medicine from Pharmacy:</label>
                     <select id="rxMedicineSelect"></select>
                     
@@ -248,7 +352,6 @@
                     <button class="secondary-btn" type="button" onclick="addMedicineToStaging()">+ Add Medicine to Prescription</button>
                 </div>
 
-                <!-- Prescription Staging Table -->
                 <div class="staging-box">
                     <h4>Current Prescription Items (<span id="stagedCount">0</span>)</h4>
                     <div style="max-height: 140px; overflow-y: auto;">
@@ -280,7 +383,6 @@
             </div>
         </div>
 
-        <!-- Right: Consultations & Pharmacy Catalog -->
         <div>
             <div class="card">
                 <h2>My Booked Appointments</h2>
@@ -295,8 +397,7 @@
             <div class="card">
                 <h2>Pharmacy Stock & Alternative Medicines</h2>
                 <div class="search-bar-wrap">
-                    <!-- Clean search input without preset value -->
-                    <input type="text" id="pharmSearch" placeholder="Type medicine name, category, or alternative..." onkeyup="filterPharmacy()" />
+                    <input type="text" id="pharmSearch" placeholder="Search medicine, category, or alternative..." onkeyup="filterPharmacy()" />
                 </div>
                 <div class="table-scroll-box" style="max-height: 380px;">
                     <table id="docPharmTable">
@@ -330,7 +431,7 @@
 <div id="view-PHARMACIST" class="view-panel">
     <div class="card">
         <h2>Unified Pharmacy Billing & Payment Desk</h2>
-        <p style="font-size:13px; color:#64748b; margin-bottom:12px;">Consolidated ledger of Doctor-Prescribed medications and direct Patient Orders pending payment.</p>
+        <p style="font-size:13px; color:var(--text-muted); margin-bottom:14px;">Consolidated ledger of Doctor-Prescribed medications and direct Patient Orders pending payment.</p>
         
         <div class="table-scroll-box" style="max-height: 320px;">
             <table id="pharmBillingQueueTable">
@@ -382,8 +483,35 @@
 <!-- ================= ADMIN VIEW ================= -->
 <div id="view-ADMIN" class="view-panel">
     <div class="card">
+        <h2>Online Patient Registration Requests</h2>
+        <p style="font-size:13px; color:var(--text-muted); margin-bottom:14px;">
+            Review incoming self-service registration forms. Approving verifies whether mobile and email are new and auto-provisions patient credentials.
+        </p>
+
+        <div class="table-scroll-box" style="max-height: 360px;">
+            <table id="adminReqTable">
+                <thead>
+                    <tr>
+                        <th>Req #</th>
+                        <th>Applicant</th>
+                        <th>Mobile</th>
+                        <th>Email</th>
+                        <th>Dept / Concern</th>
+                        <th>Submitted</th>
+                        <th>Status</th>
+                        <th>Administrative Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td colspan="8" style="text-align:center;">Loading online applications...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card">
         <h2>Register New Staff / User Account</h2>
-        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px;">
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px;">
             <div>
                 <label>Select Role:</label>
                 <select id="admRegRole" onchange="updateAdmIdHint()">
@@ -413,18 +541,18 @@
                 <label>Department / Facility Address:</label>
                 <input type="text" id="admRegAddress" placeholder="Cardiology Wing B" />
             </div>
-            <div style="grid-column: span 3;">
+            <div style="grid-column: 1 / -1;">
                 <label>Temporary Password:</label>
                 <input type="password" id="admRegPassword" placeholder="Enter secure password" />
             </div>
         </div>
         <button class="action" onclick="registerUserByAdmin()">Create Staff Account</button>
-        <p id="admRegOutput" style="margin-top:10px; font-weight:bold;"></p>
+        <p id="admRegOutput" style="margin-top:10px; font-weight:600; font-size:13px;"></p>
     </div>
 
     <div class="card">
         <h2>Admit Patient (Auto-Generates Credentials)</h2>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px;">
             <div><label>Patient Full Name:</label><input type="text" id="admPatName" placeholder="Full Name" /></div>
             <div><label>Gender:</label><select id="admPatGender"><option value="Male">Male</option><option value="Female">Female</option></select></div>
             <div><label>Contact Number:</label><input type="text" id="admPatContact" placeholder="Contact Number" /></div>
@@ -433,11 +561,10 @@
             <div><label>Residential Address:</label><input type="text" id="admPatAddr" placeholder="Address" /></div>
         </div>
         <button class="action" onclick="admitPatientAdmin()">Generate Credentials & Admit</button>
-        <p id="admPatOutput" style="margin-top:10px;font-weight:bold;"></p>
+        <p id="admPatOutput" style="margin-top:10px; font-weight:600; font-size:13px;"></p>
     </div>
 </div>
 
-<!-- ================= PATIENT HISTORY SIDEBAR ================= -->
 <div id="drawerOverlay" class="drawer-overlay" onclick="closeDrawer()"></div>
 <div id="historyDrawer" class="drawer">
     <div class="drawer-header">
@@ -453,8 +580,6 @@
     let userId = localStorage.getItem("userId") || "PAT-1001";
     let userName = localStorage.getItem("userName") || userId;
     let allMedsCache = [];
-    
-    // Multi-medicine prescription staging array
     let stagedPrescriptions = [];
 
     document.getElementById("roleLabel").innerText = `${userRole}: ${userId} (${userName})`;
@@ -492,18 +617,15 @@
             initNurseView();
         } else if (userRole === "PHARMACIST") {
             initPharmacistView();
+        } else if (userRole === "ADMIN") {
+            loadRegistrationRequests();
         }
     };
 
-    // ==========================================
-    // DOCTOR LOGIC WITH MULTI-PRESCRIPTION
-    // ==========================================
     async function initDoctorView() {
-        // Clear search input on start to prevent autofill bug
         const searchInput = document.getElementById("pharmSearch");
         if (searchInput) searchInput.value = "";
 
-        // 1. Fetch Medicines & Render Full Catalog
         try {
             const pRes = await fetch("/api/medicines");
             allMedsCache = await pRes.json();
@@ -511,7 +633,6 @@
             populateMedicineDropdown(allMedsCache);
         } catch(e) { console.error("Error loading medicines:", e); }
 
-        // 2. Fetch Patients for Dropdown
         try {
             const [ptRes, appRes] = await Promise.all([fetch("/api/patients"), fetch("/api/appointments")]);
             const allPatients = await ptRes.json();
@@ -538,11 +659,10 @@
                 });
             }
 
-            // Consultations Table
             const atb = document.querySelector("#docAppTable tbody");
             atb.innerHTML = "";
             if (doctorAppointments.length === 0) {
-                atb.innerHTML = "<tr><td colspan='4' style='text-align:center;'>No booked consultations yet.</td></tr>";
+                atb.innerHTML = "<tr><td colspan='4' style='text-align:center; color:#94a3b8;'>No booked consultations yet.</td></tr>";
             } else {
                 doctorAppointments.forEach(a => {
                     atb.innerHTML += `<tr><td><b>${a.patientname}</b></td><td>${a.disease}</td><td>${a.appointementdate}</td><td>${a.appointmenttime}</td></tr>`;
@@ -550,25 +670,23 @@
             }
         } catch(e) { console.error("Error loading doctor data:", e); }
 
-        // 3. Fetch Nurses
         try {
             const nRes = await fetch("/api/nurses");
             const nurses = await nRes.json();
             const nSel = document.getElementById("asNurseSelect");
             nSel.innerHTML = "";
-            nurses.forEach((n, idx) => {
-    // If the database has 1..12, map directly to 201..212
-    let baseNum = parseInt(n.nurseid);
-    let resolvedId;
-    if (isNaN(baseNum)) {
-        resolvedId = n.nurseid;
-    } else if (baseNum < 200) {
-        resolvedId = `NUR-${200 + baseNum}`;
-    } else {
-        resolvedId = `NUR-${baseNum}`;
-    }
-    nSel.innerHTML += `<option value="${resolvedId}">${n.name} (${resolvedId})</option>`;
-});
+            nurses.forEach(n => {
+                let baseNum = parseInt(n.nurseid);
+                let resolvedId;
+                if (isNaN(baseNum)) {
+                    resolvedId = n.nurseid;
+                } else if (baseNum < 200) {
+                    resolvedId = `NUR-${200 + baseNum}`;
+                } else {
+                    resolvedId = `NUR-${baseNum}`;
+                }
+                nSel.innerHTML += `<option value="${resolvedId}">${n.name} (${resolvedId})</option>`;
+            });
         } catch(e) {}
     }
 
@@ -592,133 +710,12 @@
                 <td><b>${m.medicineName}</b></td>
                 <td>${m.genericCategory}</td>
                 <td>${m.alternatives}</td>
-                <td><span style="color:${m.stockQuantity < 100 ? '#dc3545':'#16a34a'};font-weight:bold;">${m.stockQuantity}</span></td>
+                <td><span style="color:${m.stockQuantity < 100 ? '#ef4444':'#10b981'};font-weight:700;">${m.stockQuantity}</span></td>
                 <td>
-                    <button type="button" onclick="quickSelectMedicine('${m.medicineName}')" style="background:#2563eb; color:#fff; border:none; padding:4px 8px; border-radius:3px; cursor:pointer; font-size:11px;">+ Select</button>
+                    <button type="button" onclick="quickSelectMedicine('${m.medicineName}')" style="background:#e0f2fe; color:#0369a1; border:1px solid #bae6fd; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:11px; font-weight:600;">+ Select</button>
                 </td>
             </tr>`;
         });
-    }
-
-    // 1. Add individual medicine to the prescription cart
-    function addMedicineToStaging() {
-        const sel = document.getElementById("rxPatientSelect");
-        if (!sel || !sel.value) {
-            alert("Please select a booked patient first.");
-            return;
-        }
-
-        const medSelect = document.getElementById("rxMedicineSelect");
-        const medName = medSelect ? medSelect.value : "";
-        const dosageInput = document.getElementById("rxDosage");
-        const notesInput = document.getElementById("rxNotes");
-
-        const dosage = dosageInput ? dosageInput.value.trim() : "";
-        const instructions = notesInput ? notesInput.value.trim() : "";
-
-        if (!medName) {
-            alert("Please pick a valid medicine from the list.");
-            return;
-        }
-
-        if (!dosage) {
-            alert("Please enter the dosage (e.g., 500mg twice daily).");
-            return;
-        }
-
-        const patientName = sel.options[sel.selectedIndex].getAttribute("data-name") || sel.options[sel.selectedIndex].text;
-
-        // Push new item into staging array
-        stagedPrescriptions.push({
-            doctorId: userId,
-            doctorName: userName,
-            patientId: sel.value,
-            patientName: patientName,
-            medicineName: medName,
-            dosage: dosage,
-            instructions: instructions || "Take as directed",
-            status: "Pending"
-        });
-
-        renderStagingTable();
-
-        // Reset input fields for the next medicine
-        if (dosageInput) dosageInput.value = "";
-        if (notesInput) notesInput.value = "";
-    }
-
-    // 2. Remove an individual staged item from the cart
-    function removeStagedItem(index) {
-        stagedPrescriptions.splice(index, 1);
-        renderStagingTable();
-    }
-
-    // 3. Render items in the staging preview table
-    function renderStagingTable() {
-        const tbody = document.querySelector("#rxStagingTable tbody");
-        const countSpan = document.getElementById("stagedCount");
-        if (countSpan) countSpan.innerText = stagedPrescriptions.length;
-
-        if (!tbody) return;
-        tbody.innerHTML = "";
-
-        if (stagedPrescriptions.length === 0) {
-            tbody.innerHTML = "<tr><td colspan='3' style='text-align:center; color:#94a3b8;'>No medicines added yet.</td></tr>";
-            return;
-        }
-
-        stagedPrescriptions.forEach((item, idx) => {
-            tbody.innerHTML += `<tr>
-                <td><b>${item.medicineName}</b></td>
-                <td>${item.dosage}</td>
-                <td><button type="button" onclick="removeStagedItem(${idx})" style="background:#dc3545; color:#fff; border:none; padding:2px 6px; border-radius:3px; cursor:pointer;">&times;</button></td>
-            </tr>`;
-        });
-    }
-
-    // 4. Submit all staged items sequentially to the verified /api/prescriptions endpoint
-    async function submitBatchPrescription() {
-        if (!stagedPrescriptions || stagedPrescriptions.length === 0) {
-            alert("Please add at least one medicine to the prescription list first.");
-            return;
-        }
-
-        const totalItems = stagedPrescriptions.length;
-        let successCount = 0;
-        let errors = [];
-
-        // Loop through each staged medicine and post it
-        for (let i = 0; i < stagedPrescriptions.length; i++) {
-            const item = stagedPrescriptions[i];
-            try {
-                const res = await fetch("/api/prescriptions", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(item)
-                });
-
-                if (res.ok) {
-                    successCount++;
-                } else {
-                    const errDetail = await res.text();
-                    errors.push(`${item.medicineName} (${res.status}: ${errDetail || res.statusText})`);
-                }
-            } catch (err) {
-                errors.push(`${item.medicineName} (Network connection error)`);
-            }
-        }
-
-        if (successCount === totalItems) {
-            alert(`Prescription successfully submitted! (${successCount} items forwarded to Patient Report & Pharmacy Desk)`);
-            stagedPrescriptions = [];
-            renderStagingTable();
-        } else if (successCount > 0) {
-            alert(`Partially submitted: ${successCount} of ${totalItems} items saved.\nErrors:\n` + errors.join("\n"));
-            stagedPrescriptions = [];
-            renderStagingTable();
-        } else {
-            alert("Failed to submit prescriptions.\nErrors:\n" + errors.join("\n"));
-        }
     }
 
     function quickSelectMedicine(medName) {
@@ -750,10 +747,9 @@
         }
     }
 
-    // MULTI-MEDICINE STAGING
     function addMedicineToStaging() {
         const sel = document.getElementById("rxPatientSelect");
-        if (!sel.value) {
+        if (!sel || !sel.value) {
             alert("Please select a booked patient first.");
             return;
         }
@@ -766,11 +762,13 @@
             return;
         }
 
+        const patientName = sel.options[sel.selectedIndex].getAttribute("data-name") || sel.options[sel.selectedIndex].text;
+
         stagedPrescriptions.push({
             doctorId: userId,
             doctorName: userName,
             patientId: sel.value,
-            patientName: sel.options[sel.selectedIndex].getAttribute("data-name"),
+            patientName: patientName,
             medicineName: medName,
             dosage: dosage,
             instructions: instructions || "Take as directed",
@@ -801,12 +799,54 @@
             tbody.innerHTML += `<tr>
                 <td><b>${item.medicineName}</b></td>
                 <td>${item.dosage}</td>
-                <td><button type="button" onclick="removeStagedItem(${idx})" style="background:#dc3545; color:#fff; border:none; padding:2px 6px; border-radius:3px; cursor:pointer;">&times;</button></td>
+                <td><button type="button" onclick="removeStagedItem(${idx})" style="background:#fee2e2; color:#b91c1c; border:none; padding:3px 7px; border-radius:4px; cursor:pointer; font-weight:700;">&times;</button></td>
             </tr>`;
         });
     }
 
-  
+    async function submitBatchPrescription() {
+        if (!stagedPrescriptions || stagedPrescriptions.length === 0) {
+            alert("Please add at least one medicine to the prescription list.");
+            return;
+        }
+
+        const totalItems = stagedPrescriptions.length;
+        let successCount = 0;
+        let errors = [];
+
+        for (let i = 0; i < stagedPrescriptions.length; i++) {
+            const item = stagedPrescriptions[i];
+            try {
+                const res = await fetch("/api/prescriptions", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(item)
+                });
+
+                if (res.ok) {
+                    successCount++;
+                } else {
+                    const errDetail = await res.text();
+                    errors.push(`${item.medicineName} (${res.status}: ${errDetail || res.statusText})`);
+                }
+            } catch (err) {
+                errors.push(`${item.medicineName} (Network error)`);
+            }
+        }
+
+        if (successCount === totalItems) {
+            alert(`Prescription successfully submitted! (${successCount} items forwarded to Patient Report & Pharmacy Desk)`);
+            stagedPrescriptions = [];
+            renderStagingTable();
+        } else if (successCount > 0) {
+            alert(`Partially submitted: ${successCount} of ${totalItems} items saved.\nErrors:\n` + errors.join("\n"));
+            stagedPrescriptions = [];
+            renderStagingTable();
+        } else {
+            alert("Failed to submit prescriptions.\nErrors:\n" + errors.join("\n"));
+        }
+    }
+
     async function assignNurse() {
         const pId = document.getElementById("asPatientId").value.trim();
         const pName = document.getElementById("asPatientName").value.trim();
@@ -843,9 +883,6 @@
         }
     }
 
-    // ==========================================
-    // PHARMACIST LOGIC (PAYMENT DESK)
-    // ==========================================
     async function initPharmacistView() {
         loadPharmacyBillingQueue();
         loadPharmacyInventory();
@@ -876,10 +913,10 @@
                     <td><span class="badge ${isPaid ? 'badge-done':'badge-pending'}">${b.paymentStatus} (${b.paymentMode})</span></td>
                     <td>
                         ${isPaid 
-                            ? `<span style="color:#16a34a; font-weight:bold;">&#10004; Settled</span>`
+                            ? `<span style="color:#10b981; font-weight:700;">&#10004; Settled</span>`
                             : `<div style="display:flex; gap:4px;">
-                                <button onclick="processBillPayment(${b.id}, 'CASH')" style="background:#16a34a; color:#fff; border:none; padding:4px 6px; font-size:11px; border-radius:3px; cursor:pointer;">Cash</button>
-                                <button onclick="processBillPayment(${b.id}, 'UPI/CARD')" style="background:#0026ff; color:#fff; border:none; padding:4px 6px; font-size:11px; border-radius:3px; cursor:pointer;">Card/UPI</button>
+                                <button onclick="processBillPayment(${b.id}, 'CASH')" style="background:#10b981; color:#fff; border:none; padding:4px 8px; font-size:11px; font-weight:600; border-radius:4px; cursor:pointer;">Cash</button>
+                                <button onclick="processBillPayment(${b.id}, 'UPI/CARD')" style="background:#0284c7; color:#fff; border:none; padding:4px 8px; font-size:11px; font-weight:600; border-radius:4px; cursor:pointer;">Card/UPI</button>
                                </div>`
                         }
                     </td>
@@ -930,9 +967,6 @@
         loadPharmacyInventory();
     }
 
-    // ==========================================
-    // PATIENT LOGIC & MEDICAL REPORT
-    // ==========================================
     async function initPatientView() {
         document.getElementById("repDate").innerText = "Date: " + new Date().toLocaleDateString();
         document.getElementById("repId").innerText = "Record ID: " + userId;
@@ -980,7 +1014,7 @@
             if (myProfile) {
                 pSec.innerHTML = `
                     <p><b>Full Name:</b> ${myProfile.patientname} &nbsp;|&nbsp; <b>Gender:</b> ${myProfile.gender} &nbsp;|&nbsp; <b>Contact:</b> ${myProfile.contact}</p>
-                    <p><b>Primary Diagnosis:</b> <span style="color:#0026ff;font-weight:bold;">${myProfile.disease}</span> &nbsp;|&nbsp; <b>Assigned Ward/Room:</b> ${myProfile.roomno} &nbsp;|&nbsp; <b>Address:</b> ${myProfile.address}</p>
+                    <p style="margin-top:4px;"><b>Primary Diagnosis:</b> <span style="color:#0284c7;font-weight:700;">${myProfile.disease}</span> &nbsp;|&nbsp; <b>Assigned Ward/Room:</b> ${myProfile.roomno} &nbsp;|&nbsp; <b>Address:</b> ${myProfile.address}</p>
                 `;
             } else {
                 pSec.innerHTML = `<p><b>Patient ID:</b> ${userId} &nbsp;|&nbsp; <b>Name:</b> ${userName}</p>`;
@@ -1087,9 +1121,6 @@
         }
     }
 
-    // ==========================================
-    // NURSE LOGIC
-    // ==========================================
     async function initNurseView() {
         const tbody = document.querySelector("#nursePatientTable tbody");
         tbody.innerHTML = "<tr><td colspan='6' style='text-align:center;'>Loading duties...</td></tr>";
@@ -1116,8 +1147,8 @@
                     <td><span class="badge ${isCompleted ? 'badge-done':'badge-pending'}">${a.activityStatus}</span></td>
                     <td>
                         ${isCompleted 
-                            ? `<span style="color:#16a34a;font-weight:bold;">&#10004; Completed</span>` 
-                            : `<button class="action" style="padding:5px 10px;font-size:12px;width:auto;" onclick="updateNurseStatus(${a.id}, 'Completed')">Mark Completed</button>`
+                            ? `<span style="color:#10b981;font-weight:700;">&#10004; Completed</span>` 
+                            : `<button class="action" style="padding:6px 12px;font-size:12px;width:auto;" onclick="updateNurseStatus(${a.id}, 'Completed')">Mark Completed</button>`
                         }
                     </td>
                 </tr>`;
@@ -1158,9 +1189,95 @@
         });
     }
 
-    // ==========================================
-    // ADMIN LOGIC
-    // ==========================================
+    async function loadRegistrationRequests() {
+        const tbody = document.querySelector("#adminReqTable tbody");
+        if (!tbody) return;
+
+        try {
+            const res = await fetch("/api/registration-requests");
+            const list = await res.json();
+            tbody.innerHTML = "";
+
+            if (!list || list.length === 0) {
+                tbody.innerHTML = "<tr><td colspan='8' style='text-align:center; padding:16px; color:#64748b;'>No online registration applications found.</td></tr>";
+                return;
+            }
+
+            list.forEach(r => {
+                const isPending = r.status === "PENDING";
+                const isApproved = r.status === "APPROVED";
+                const badgeColor = isApproved ? "#10b981" : (isPending ? "#f59e0b" : "#ef4444");
+
+                tbody.innerHTML += `<tr>
+                    <td>#${r.id}</td>
+                    <td><b>${r.fullName}</b><br><small style="color:#64748b;">${r.gender}, Blood: ${r.bloodGroup}</small></td>
+                    <td>${r.contactNumber}</td>
+                    <td>${r.email}</td>
+                    <td><b>${r.preferredDepartment}</b><br><small style="color:#64748b;">${r.medicalHistory}</small></td>
+                    <td>${r.requestDate || '-'}</td>
+                    <td><span style="color:${badgeColor}; font-weight:700;">${r.status}</span></td>
+                    <td>
+                        ${isPending ? `
+                            <div style="display:flex; gap:6px;">
+                                <button onclick="approveOnlineRequest(${r.id})" style="background:#10b981; color:#fff; border:none; padding:6px 10px; border-radius:4px; font-weight:600; cursor:pointer; font-size:12px;">
+                                    Approve
+                                </button>
+                                <button onclick="disapproveOnlineRequest(${r.id})" style="background:#ef4444; color:#fff; border:none; padding:6px 10px; border-radius:4px; font-weight:600; cursor:pointer; font-size:12px;">
+                                    Disapprove
+                                </button>
+                            </div>
+                        ` : (isApproved ? `<span style="color:#10b981; font-size:12px; font-weight:700;">ID: ${r.generatedPatientId}</span>` 
+                                       : `<span style="color:#ef4444; font-size:12px;">${r.rejectionReason || 'Rejected'}</span>`)}
+                    </td>
+                </tr>`;
+            });
+        } catch(err) {
+            console.error(err);
+            tbody.innerHTML = "<tr><td colspan='8' style='text-align:center; color:red;'>Failed to load registration applications.</td></tr>";
+        }
+    }
+
+    async function approveOnlineRequest(id) {
+        if (!confirm(`Approve registration #${id}? System will verify email/contact and provision credentials.`)) return;
+
+        try {
+            const res = await fetch(`/api/registration-requests/${id}/approve`, { method: "POST" });
+            const data = await res.json();
+
+            if (res.ok) {
+                alert(`Approved Successfully!\nGenerated Patient ID: ${data.patientId}\nTemporary Password: ${data.password}`);
+                loadRegistrationRequests();
+            } else {
+                alert(`Approval Rejected: ${data.reason || data.error}`);
+                loadRegistrationRequests();
+            }
+        } catch(err) {
+            alert("Error communicating with registration server.");
+        }
+    }
+
+    async function disapproveOnlineRequest(id) {
+        const reason = prompt("Enter reason for disapproval:", "Mobile number or email already in use / verification failed.");
+        if (reason === null) return;
+
+        try {
+            const res = await fetch(`/api/registration-requests/${id}/reject`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ reason: reason })
+            });
+
+            if (res.ok) {
+                alert("Request marked as Disapproved / Rejected.");
+                loadRegistrationRequests();
+            } else {
+                alert("Error rejecting request.");
+            }
+        } catch(err) {
+            alert("Error rejecting request.");
+        }
+    }
+
     function updateAdmIdHint() {
         const role = document.getElementById("admRegRole").value;
         const uInput = document.getElementById("admRegUsername");
@@ -1195,10 +1312,10 @@
         const data = await res.json();
         const out = document.getElementById("admRegOutput");
         if (res.ok) {
-            out.style.color = "#16a34a";
+            out.style.color = "#10b981";
             out.innerText = `Success: Account ${payload.username} (${payload.role}) created!`;
         } else {
-            out.style.color = "#dc3545";
+            out.style.color = "#ef4444";
             out.innerText = `Error: ${data.error || "Failed"}`;
         }
     }

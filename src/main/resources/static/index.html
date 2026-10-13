@@ -3,121 +3,379 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hospital Management System | Sign In</title>
+    <title>Metropolitan Hospital | Portal Access</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        :root {
+            --primary: #0284c7;
+            --primary-hover: #0369a1;
+            --bg-base: #f8fafc;
+            --surface: #ffffff;
+            --border: #e2e8f0;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --accent-yellow: #f59e0b;
+            --accent-yellow-hover: #d97706;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+            --radius-md: 10px;
+            --radius-lg: 16px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, sans-serif; }
         body { 
-            background: #f1f5f9; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
+            background: var(--bg-base); 
             min-height: 100vh; 
+            display: flex;
+            flex-direction: column;
+            color: var(--text-main);
+        }
+
+        /* Top Navigation Header */
+        header.top-nav {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #ffffff;
+            padding: 16px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-md);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .nav-brand { 
+            font-size: 20px; 
+            font-weight: 700; 
+            letter-spacing: -0.3px; 
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .nav-actions { display: flex; gap: 12px; align-items: center; }
+        .btn-online-reg {
+            background: var(--accent-yellow);
+            color: #0f172a;
+            border: none;
+            padding: 9px 20px;
+            font-size: 13px;
+            font-weight: 700;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
+        }
+        .btn-online-reg:hover { background: var(--accent-yellow-hover); transform: translateY(-1px); }
+        .btn-track-status {
+            background: rgba(255,255,255,0.08);
+            color: #f1f5f9;
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 9px 18px;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn-track-status:hover { background: rgba(255,255,255,0.16); }
+
+        /* Centered Sign In Card */
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 32px 20px;
+            background: radial-gradient(circle at 50% 20%, #e0f2fe 0%, #f8fafc 65%);
         }
         .login-card {
-            background: #ffffff;
-            width: 480px;
+            background: var(--surface);
+            width: 100%;
+            max-width: 440px;
             padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
         }
-        h2 { color: #1e293b; margin-bottom: 24px; font-size: 24px; font-weight: 700; }
+        .login-card h2 { 
+            font-size: 22px; 
+            font-weight: 700; 
+            letter-spacing: -0.4px; 
+            margin-bottom: 6px;
+        }
+        .login-card .subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
         
         .role-selector {
             display: flex;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
+            background: #f1f5f9;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
             padding: 4px;
             margin-bottom: 24px;
             gap: 4px;
         }
         .role-btn {
             flex: 1;
-            padding: 8px 0;
+            padding: 7px 0;
             border: none;
             background: transparent;
-            color: #64748b;
+            color: var(--text-muted);
             font-weight: 600;
-            font-size: 13px;
-            border-radius: 8px;
+            font-size: 12px;
+            border-radius: 6px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.15s ease;
         }
         .role-btn.active {
-            background: #ffffff;
-            color: #2563eb;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            background: var(--surface);
+            color: var(--primary);
+            font-weight: 700;
+            box-shadow: var(--shadow-sm);
         }
 
-        label { display: block; font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 6px; }
+        label { display: block; font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 6px; }
         .input-group { margin-bottom: 18px; }
-        input {
+        input, select, textarea {
             width: 100%;
-            padding: 12px 14px;
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
             font-size: 14px;
             outline: none;
-            transition: border-color 0.2s;
+            background: #fff;
+            color: var(--text-main);
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
         }
-        input:focus { border-color: #2563eb; }
-        .prefix-hint { font-size: 11px; color: #94a3b8; margin-top: 4px; }
+        input:focus, select:focus, textarea:focus { 
+            border-color: var(--primary); 
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15); 
+        }
+        .prefix-hint { font-size: 11px; color: var(--text-muted); margin-top: 5px; }
 
         .btn-submit {
             width: 100%;
-            background: #2563eb;
+            background: var(--primary);
             color: white;
             border: none;
-            padding: 14px;
-            font-size: 15px;
-            font-weight: 700;
-            border-radius: 8px;
+            padding: 11px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: var(--radius-md);
             cursor: pointer;
-            margin-top: 8px;
-            transition: background 0.2s;
+            margin-top: 6px;
+            transition: all 0.2s ease;
         }
-        .btn-submit:hover { background: #1d4ed8; }
+        .btn-submit:hover { background: var(--primary-hover); transform: translateY(-1px); }
 
         #alertBox {
             display: none;
-            padding: 10px 14px;
-            border-radius: 6px;
+            padding: 11px 14px;
+            border-radius: var(--radius-md);
             font-size: 13px;
-            margin-bottom: 16px;
+            margin-bottom: 18px;
             font-weight: 500;
         }
-        .alert-error { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
+        .alert-error { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+
+        /* Modal Overlay & Modal Window */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal-content {
+            background: var(--surface);
+            width: 100%;
+            max-width: 650px;
+            max-height: 90vh;
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            overflow-y: auto;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);
+            border: 1px solid var(--border);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 14px;
+            margin-bottom: 16px;
+        }
+        .modal-header h3 { font-size: 18px; font-weight: 700; color: var(--text-main); }
+        .close-modal-btn { background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text-muted); }
+
+        .form-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .credential-box {
+            background: #f0f9ff;
+            border: 2px dashed #38bdf8;
+            border-radius: var(--radius-md);
+            padding: 24px;
+            text-align: center;
+            margin: 16px 0;
+        }
+        .cred-item { font-size: 16px; font-weight: 700; color: #0369a1; margin: 6px 0; }
     </style>
 </head>
 <body>
 
-<div class="login-card">
-    <h2>Sign In to Portal</h2>
-
-    <div class="role-selector">
-        <button class="role-btn active" onclick="selectRole('PATIENT', this)">Patient</button>
-        <button class="role-btn" onclick="selectRole('DOCTOR', this)">Doctor</button>
-        <button class="role-btn" onclick="selectRole('NURSE', this)">Nurse</button>
-        <button class="role-btn" onclick="selectRole('PHARMACIST', this)">Pharmacy</button>
-        <button class="role-btn" onclick="selectRole('ADMIN', this)">Admin</button>
+<header class="top-nav">
+    <div class="nav-brand">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:#38bdf8;"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
+        Metropolitan Hospital System
     </div>
+    <div class="nav-actions">
+        <button class="btn-track-status" onclick="openTrackModal()">Track Application Status</button>
+        <button class="btn-online-reg" onclick="openRegModal()">Register Online</button>
+    </div>
+</header>
 
-    <div id="alertBox"></div>
+<div class="main-wrapper">
+    <div class="login-card">
+        <h2>Welcome back</h2>
+        <p class="subtitle">Please select your portal role and enter your credentials.</p>
 
-    <form onsubmit="handleLogin(event)">
-        <div class="input-group">
-            <label id="idLabel">Patient ID / Username</label>
-            <input type="text" id="username" placeholder="e.g. PAT-1001" required />
-            <div id="idHint" class="prefix-hint">Format: PAT-xxxx</div>
+        <div class="role-selector">
+            <button class="role-btn active" onclick="selectRole('PATIENT', this)">Patient</button>
+            <button class="role-btn" onclick="selectRole('DOCTOR', this)">Doctor</button>
+            <button class="role-btn" onclick="selectRole('NURSE', this)">Nurse</button>
+            <button class="role-btn" onclick="selectRole('PHARMACIST', this)">Pharmacy</button>
+            <button class="role-btn" onclick="selectRole('ADMIN', this)">Admin</button>
         </div>
 
-        <div class="input-group">
-            <label>Password</label>
-            <input type="password" id="password" placeholder="Enter your password" required />
+        <div id="alertBox"></div>
+
+        <form onsubmit="handleLogin(event)">
+            <div class="input-group">
+                <label id="idLabel">Patient ID</label>
+                <input type="text" id="username" placeholder="e.g. PAT-1001" required />
+                <div id="idHint" class="prefix-hint">Format: PAT-xxxx</div>
+            </div>
+
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="password" placeholder="Enter your password" required />
+            </div>
+
+            <button type="submit" class="btn-submit">Sign In to Dashboard</button>
+        </form>
+    </div>
+</div>
+
+<!-- ================= ONLINE REGISTRATION MODAL ================= -->
+<div id="regModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Online Patient Registration Application</h3>
+            <button class="close-modal-btn" onclick="closeRegModal()">&times;</button>
+        </div>
+        <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">
+            Fill in the 10 fields below. The Hospital Administration will review your contact details and automatically provision your digital login.
+        </p>
+
+        <form onsubmit="submitOnlineRegistration(event)">
+            <div class="form-grid-2">
+                <div>
+                    <label>1. Full Legal Name:</label>
+                    <input type="text" id="regFullName" placeholder="First and Last name" required />
+                </div>
+                <div>
+                    <label>2. Gender:</label>
+                    <select id="regGender" required>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div>
+                    <label>3. Date of Birth:</label>
+                    <input type="date" id="regDob" required />
+                </div>
+                <div>
+                    <label>4. Email Address:</label>
+                    <input type="email" id="regEmail" placeholder="yourname@gmail.com" required />
+                </div>
+                <div>
+                    <label>5. Contact Number (Mobile):</label>
+                    <input type="tel" id="regContact" placeholder="10-digit Mobile number" required />
+                </div>
+                <div>
+                    <label>6. Emergency Contact:</label>
+                    <input type="tel" id="regEmergencyContact" placeholder="Relative / Guardian phone" required />
+                </div>
+                <div>
+                    <label>7. Blood Group:</label>
+                    <select id="regBloodGroup" required>
+                        <option value="O+">O Positive (O+)</option>
+                        <option value="A+">A Positive (A+)</option>
+                        <option value="B+">B Positive (B+)</option>
+                        <option value="AB+">AB Positive (AB+)</option>
+                        <option value="O-">O Negative (O-)</option>
+                        <option value="A-">A Negative (A-)</option>
+                        <option value="B-">B Negative (B-)</option>
+                        <option value="AB-">AB Negative (AB-)</option>
+                    </select>
+                </div>
+                <div>
+                    <label>8. Preferred Department:</label>
+                    <select id="regDept" required>
+                        <option value="Cardiology">Cardiology</option>
+                        <option value="Neurology">Neurology</option>
+                        <option value="Orthopedics">Orthopedics</option>
+                        <option value="Pediatrics">Pediatrics</option>
+                        <option value="General Medicine">General Medicine</option>
+                        <option value="Dermatology">Dermatology</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="margin-top:10px;">
+                <label>9. Residential Address:</label>
+                <input type="text" id="regAddress" placeholder="Street, City, Postal Code" required />
+            </div>
+
+            <div style="margin-top:10px;">
+                <label>10. Primary Medical Concern / Past Health History:</label>
+                <textarea id="regHistory" rows="2" placeholder="Describe symptoms, known allergies, chronic conditions..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit" style="margin-top:16px;">Submit Registration to Admin</button>
+        </form>
+    </div>
+</div>
+
+<!-- ================= STATUS TRACKING MODAL ================= -->
+<div id="trackModal" class="modal-overlay">
+    <div class="modal-content" style="max-width: 480px;">
+        <div class="modal-header">
+            <h3>Registration Status</h3>
+            <button class="close-modal-btn" onclick="closeTrackModal()">&times;</button>
         </div>
 
-        <button type="submit" class="btn-submit">Sign In</button>
-    </form>
+        <div id="trackInputBlock">
+            <label>Enter Application Reference ID:</label>
+            <input type="number" id="trackAppId" placeholder="e.g. 1, 2, 3..." />
+            <button class="btn-submit" onclick="checkStatus()">Check Status</button>
+        </div>
+
+        <div id="trackResultBlock" style="margin-top:16px; display:none;"></div>
+    </div>
 </div>
 
 <script>
@@ -177,6 +435,115 @@
         } catch (err) {
             showAlert("Unable to connect to the authentication server.");
         }
+    }
+
+    function openRegModal() { document.getElementById("regModal").style.display = "flex"; }
+    function closeRegModal() { document.getElementById("regModal").style.display = "none"; }
+    function openTrackModal() { document.getElementById("trackModal").style.display = "flex"; }
+    function closeTrackModal() { document.getElementById("trackModal").style.display = "none"; }
+
+    async function submitOnlineRegistration(e) {
+        e.preventDefault();
+
+        const payload = {
+            fullName: document.getElementById("regFullName").value.trim(),
+            gender: document.getElementById("regGender").value,
+            dob: document.getElementById("regDob").value,
+            email: document.getElementById("regEmail").value.trim(),
+            contactNumber: document.getElementById("regContact").value.trim(),
+            emergencyContact: document.getElementById("regEmergencyContact").value.trim(),
+            bloodGroup: document.getElementById("regBloodGroup").value,
+            preferredDepartment: document.getElementById("regDept").value,
+            address: document.getElementById("regAddress").value.trim(),
+            medicalHistory: document.getElementById("regHistory").value.trim()
+        };
+
+        try {
+            const res = await fetch("/api/registration-requests", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                closeRegModal();
+                alert(`Registration submitted! Your Reference ID is: #${data.id}\nPlease save this ID to track your status.`);
+                document.getElementById("trackAppId").value = data.id;
+                openTrackModal();
+                checkStatus();
+            } else {
+                alert("Failed to submit application. Please check your details.");
+            }
+        } catch(err) {
+            alert("Error connecting to hospital server.");
+        }
+    }
+
+    async function checkStatus() {
+        const id = document.getElementById("trackAppId").value.trim();
+        const resBox = document.getElementById("trackResultBlock");
+        if (!id) { alert("Please enter your Application Reference ID"); return; }
+
+        resBox.style.display = "block";
+        resBox.innerHTML = "<p>Checking application records...</p>";
+
+        try {
+            const res = await fetch(`/api/registration-requests/${id}`);
+            if (!res.ok) {
+                resBox.innerHTML = "<p style='color:#dc3545;'>Application ID not found. Please verify your reference number.</p>";
+                return;
+            }
+
+            const data = await res.json();
+
+            if (data.status === "PENDING") {
+                resBox.innerHTML = `
+                    <div style="background:#fef9c3; border: 1px solid #fde047; padding:16px; border-radius:10px; color:#854d0e;">
+                        <h4 style="margin-bottom:4px;">Application Under Review</h4>
+                        <p style="font-size:13px;">Applicant: <b>${data.fullName}</b></p>
+                        <p style="font-size:13px; margin-top:2px;">Status: <b>PENDING ADMIN APPROVAL</b></p>
+                        <p style="font-size:12px; margin-top:8px;">The hospital admin is reviewing your mobile number and email. Please check back shortly.</p>
+                    </div>
+                `;
+            } else if (data.status === "REJECTED") {
+                resBox.innerHTML = `
+                    <div style="background:#fee2e2; border: 1px solid #fecaca; padding:16px; border-radius:10px; color:#991b1b;">
+                        <h4 style="margin-bottom:4px;">Application Disapproved</h4>
+                        <p style="font-size:13px;">Applicant: <b>${data.fullName}</b></p>
+                        <p style="font-size:13px; margin-top:2px;">Reason: <b>${data.rejectionReason || 'Mobile number or email already in use.'}</b></p>
+                    </div>
+                `;
+            } else if (data.status === "APPROVED") {
+                resBox.innerHTML = `
+                    <div class="credential-box">
+                        <h3 style="color:#0284c7; margin-bottom:8px;">🎉 Registration Approved!</h3>
+                        <p style="font-size:13px; color:#475569;">Welcome, <b>${data.fullName}</b>. Your digital credentials have been generated:</p>
+                        
+                        <div style="margin:16px 0;">
+                            <div class="cred-item">Patient ID: <span style="color:#0f172a;">${data.generatedPatientId}</span></div>
+                            <div class="cred-item">Password: <span style="color:#0f172a;">${data.generatedPassword}</span></div>
+                        </div>
+
+                        <button class="btn-submit" style="background:#0284c7;" onclick="proceedToSignIn('${data.generatedPatientId}', '${data.generatedPassword}')">
+                            Proceed to Sign In ➔
+                        </button>
+                    </div>
+                `;
+            }
+        } catch(err) {
+            resBox.innerHTML = "<p style='color:red;'>Could not fetch application status.</p>";
+        }
+    }
+
+    function proceedToSignIn(patId, patPass) {
+        closeTrackModal();
+        const patientBtn = document.querySelectorAll('.role-btn')[0];
+        selectRole('PATIENT', patientBtn);
+        document.getElementById("username").value = patId;
+        document.getElementById("password").value = patPass;
+        document.getElementById("password").focus();
     }
 </script>
 
