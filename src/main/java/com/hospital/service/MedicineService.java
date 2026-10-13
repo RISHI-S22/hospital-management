@@ -30,7 +30,10 @@ public class MedicineService {
     }
 
     public MedicineOrder purchaseMedicine(MedicineOrder order) {
-        Medicine med = medicineRepository.findByMedicineNameIgnoreCase(order.getMedicineName())
+        Medicine med = medicineRepository.findAll()
+                .stream()
+                .filter(m -> m.getMedicineName() != null && m.getMedicineName().equalsIgnoreCase(order.getMedicineName()))
+                .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Medicine not found in inventory"));
 
         if (med.getStockQuantity() < order.getQuantity()) {

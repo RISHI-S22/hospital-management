@@ -27,17 +27,23 @@
         .card { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 1px 6px rgba(0,0,0,0.08); }
         h2 { color: #0026ff; margin-bottom: 12px; border-bottom: 2px solid #eef2f7; padding-bottom: 6px; font-size: 18px; }
         
-        input, select, textarea { width: 100%; padding: 10px; margin: 6px 0 12px 0; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
-        button.action { background: #28a745; color: white; border: none; padding: 10px 16px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; }
+        label { display: block; font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 4px; margin-top: 8px; }
+        input, select, textarea { width: 100%; padding: 10px; margin: 4px 0 10px 0; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; outline: none; }
+        input:focus, select:focus, textarea:focus { border-color: #0026ff; }
         
-        .grid { display: grid; grid-template-columns: 380px 1fr; gap: 20px; }
+        button.action { background: #28a745; color: white; border: none; padding: 10px 16px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 8px; }
+        button.action:hover { opacity: 0.9; }
+        button.secondary-btn { background: #2563eb; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 4px; }
+        button.secondary-btn:hover { background: #1d4ed8; }
+
+        .grid { display: grid; grid-template-columns: 420px 1fr; gap: 20px; }
         @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
 
         /* Contained Scrollable Tables */
         .search-bar-wrap { position: relative; margin-bottom: 10px; }
         .search-bar-wrap input { margin: 0; padding: 9px 12px; border: 1px solid #0026ff; border-radius: 4px; }
         .table-scroll-box {
-            max-height: 270px;
+            max-height: 280px;
             overflow-y: auto;
             border: 1px solid #e1e4e8;
             border-radius: 6px;
@@ -46,6 +52,41 @@
         th, td { border-bottom: 1px solid #e1e4e8; padding: 8px 10px; text-align: left; font-size: 13px; }
         th { background: #0026ff; color: white; position: sticky; top: 0; z-index: 2; }
         tr:hover { background-color: #f8fafc; }
+
+        /* Status Badges */
+        .badge { padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 12px; display: inline-block; }
+        .badge-pending { background: #fef08a; color: #854d0e; }
+        .badge-done { background: #bbf7d0; color: #166534; }
+        .badge-prescription { background: #dbeafe; color: #1e40af; }
+        .badge-patientorder { background: #f3e8ff; color: #6b21a8; }
+
+        /* Prescription Staging Box */
+        .staging-box {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        .staging-box h4 { font-size: 13px; color: #0026ff; margin-bottom: 6px; }
+
+        /* Clinical Report Sheet Styling */
+        .report-sheet {
+            background: #ffffff;
+            border: 2px solid #0026ff;
+            border-radius: 8px;
+            padding: 24px;
+            margin-top: 15px;
+        }
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 2px dashed #cbd5e1;
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+        }
+        .report-section { margin-bottom: 16px; }
+        .report-section h3 { color: #0026ff; font-size: 15px; margin-bottom: 6px; }
 
         /* Side History Drawer */
         .drawer-overlay {
@@ -89,13 +130,61 @@
 
 <!-- ================= PATIENT VIEW ================= -->
 <div id="view-PATIENT" class="view-panel">
+    <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h2>Comprehensive Medical & Prescription Report</h2>
+            <button onclick="window.print()" style="background:#0026ff; color:#fff; border:none; padding:6px 14px; border-radius:4px; cursor:pointer; font-weight:bold;">Print / Save Report</button>
+        </div>
+        
+        <div class="report-sheet" id="patientMedicalReport">
+            <div class="report-header">
+                <div>
+                    <h2 style="border:none; margin:0; color:#0026ff;">METROPOLITAN HOSPITAL MEDICAL REPORT</h2>
+                    <p style="font-size:12px; color:#64748b;">Clinical Summary & Pharmacy Fulfillment Ledger</p>
+                </div>
+                <div style="text-align:right;">
+                    <p id="repDate" style="font-weight:bold; font-size:13px;"></p>
+                    <p id="repId" style="font-size:13px; color:#0026ff;"></p>
+                </div>
+            </div>
+
+            <div class="report-section" id="repPatientDetails">
+                <h3>1. Patient Admission Profile</h3>
+                <p>Loading patient demographic details...</p>
+            </div>
+
+            <div class="report-section">
+                <h3>2. Doctor Prescriptions & Dosage Regimen</h3>
+                <div class="table-scroll-box" style="max-height:160px;">
+                    <table id="repPrescriptionTable">
+                        <thead>
+                            <tr><th>Prescribed By</th><th>Medicine Name</th><th>Dosage</th><th>Clinical Notes</th><th>Date</th></tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="report-section">
+                <h3>3. Pharmacy Invoices & Payment Ledger</h3>
+                <div class="table-scroll-box" style="max-height:160px;">
+                    <table id="repBillingTable">
+                        <thead>
+                            <tr><th>Item Source</th><th>Medicine</th><th>Quantity</th><th>Total ($)</th><th>Payment Status</th><th>Method</th></tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="grid">
-        <!-- Left: Forms for Booking & Ordering -->
         <div>
             <div class="card">
-                <h2>Book Doctor Appointment</h2>
-                <label>Chief Health Concern / Issue:</label>
-                <input type="text" id="ptConcern" placeholder="e.g. Chest pain, High fever, Routine checkup" />
+                <h2>Book Doctor Consultation</h2>
+                <label>Chief Health Concern:</label>
+                <input type="text" id="ptConcern" placeholder="e.g. Chest pain, High fever" />
                 <label>Select Specialist / Doctor:</label>
                 <select id="ptDocSelect"></select>
                 <label>Preferred Date:</label>
@@ -104,55 +193,29 @@
                 <select id="ptTime">
                     <option value="09:00 AM">09:00 AM</option>
                     <option value="10:30 AM">10:30 AM</option>
-                    <option value="11:45 AM">11:45 AM</option>
                     <option value="02:00 PM">02:00 PM</option>
                     <option value="04:15 PM">04:15 PM</option>
                 </select>
-                <button class="action" onclick="bookAppointment()">Confirm Appointment</button>
+                <button class="action" onclick="bookAppointment()">Confirm Consultation</button>
             </div>
 
             <div class="card">
-                <h2>Order Medicine from Pharmacy</h2>
+                <h2>Order Extra Medicines from Pharmacy</h2>
                 <label>Select In-Stock Medicine:</label>
                 <select id="ptMedSelect"></select>
                 <label>Quantity:</label>
                 <input type="number" id="ptMedQty" value="1" min="1" max="10" />
-                <button class="action" onclick="buyMedicine()">Place Order</button>
+                <button class="action" onclick="orderMedicinePatient()">Send to Pharmacy Billing Desk</button>
             </div>
         </div>
 
-        <!-- Right: Real-time Patient Status & Records -->
         <div>
             <div class="card">
                 <h2>My Active Appointments</h2>
                 <div class="table-scroll-box">
                     <table id="ptAppTable">
                         <thead>
-                            <tr><th>Doctor</th><th>Health Issue</th><th>Date</th><th>Time Slot</th></tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="card">
-                <h2>Doctor Prescriptions for Me</h2>
-                <div class="table-scroll-box">
-                    <table id="ptRxTable">
-                        <thead>
-                            <tr><th>Prescribed By</th><th>Medicine</th><th>Dosage</th><th>Clinical Notes</th><th>Date</th></tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="card">
-                <h2>My Pharmacy Orders</h2>
-                <div class="table-scroll-box">
-                    <table id="ptOrdersTable">
-                        <thead>
-                            <tr><th>Medicine</th><th>Quantity</th><th>Total Paid</th><th>Order Date</th></tr>
+                            <tr><th>Doctor</th><th>Health Issue</th><th>Date</th><th>Time</th></tr>
                         </thead>
                         <tbody></tbody>
                     </table>
@@ -165,18 +228,42 @@
 <!-- ================= DOCTOR VIEW ================= -->
 <div id="view-DOCTOR" class="view-panel">
     <div class="grid">
+        <!-- Left: Prescribe Multiple Medications & Nurse Assignment -->
         <div>
             <div class="card">
-                <h2>Prescribe Medication</h2>
+                <h2>Prescribe Medication (Multi-Medicine)</h2>
                 <label>Select Booked Patient:</label>
                 <select id="rxPatientSelect" onchange="syncRxPatient()"></select>
-                <label>Medicine from Pharmacy:</label>
-                <select id="rxMedicineSelect"></select>
-                <label>Dosage:</label>
-                <input type="text" id="rxDosage" placeholder="e.g. 500mg twice daily" />
-                <label>Clinical Notes / Instructions:</label>
-                <textarea id="rxNotes" rows="2" placeholder="Continue for 5 days, review vitals"></textarea>
-                <button class="action" onclick="submitPrescription()">Submit Prescription</button>
+                
+                <div style="border: 1px dashed #2563eb; padding: 12px; border-radius: 6px; background: #f8fafc; margin-top: 8px;">
+                    <label>Medicine from Pharmacy:</label>
+                    <select id="rxMedicineSelect"></select>
+                    
+                    <label>Dosage:</label>
+                    <input type="text" id="rxDosage" placeholder="e.g. 500mg twice daily after meals" />
+                    
+                    <label>Clinical Instructions:</label>
+                    <textarea id="rxNotes" rows="2" placeholder="e.g. Continue for 5 days"></textarea>
+                    
+                    <button class="secondary-btn" type="button" onclick="addMedicineToStaging()">+ Add Medicine to Prescription</button>
+                </div>
+
+                <!-- Prescription Staging Table -->
+                <div class="staging-box">
+                    <h4>Current Prescription Items (<span id="stagedCount">0</span>)</h4>
+                    <div style="max-height: 140px; overflow-y: auto;">
+                        <table id="rxStagingTable">
+                            <thead>
+                                <tr><th>Medicine</th><th>Dosage</th><th>Action</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td colspan="3" style="text-align:center; color:#94a3b8;">No medicines added yet.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <button class="action" style="margin-top: 14px;" onclick="submitBatchPrescription()">Forward All to Patient & Pharmacy</button>
             </div>
 
             <div class="card">
@@ -188,15 +275,16 @@
                 <label>Select Nurse:</label>
                 <select id="asNurseSelect"></select>
                 <label>Care Instructions:</label>
-                <textarea id="asNotes" rows="2" placeholder="Medication dosage, monitor vitals..."></textarea>
-                <button class="action" onclick="assignNurse()">Confirm Assignment</button>
+                <textarea id="asNotes" rows="2" placeholder="Administer IV fluid, check BP every 2 hrs..."></textarea>
+                <button class="action" onclick="assignNurse()">Confirm Nurse Assignment</button>
             </div>
         </div>
 
+        <!-- Right: Consultations & Pharmacy Catalog -->
         <div>
             <div class="card">
                 <h2>My Booked Appointments</h2>
-                <div class="table-scroll-box">
+                <div class="table-scroll-box" style="max-height: 180px;">
                     <table id="docAppTable">
                         <thead><tr><th>Patient</th><th>Disease / Condition</th><th>Date</th><th>Time</th></tr></thead>
                         <tbody></tbody>
@@ -207,12 +295,13 @@
             <div class="card">
                 <h2>Pharmacy Stock & Alternative Medicines</h2>
                 <div class="search-bar-wrap">
-                    <input type="text" id="pharmSearch" placeholder="Search medicine, category, or alternative..." onkeyup="filterPharmacy()" />
+                    <!-- Clean search input without preset value -->
+                    <input type="text" id="pharmSearch" placeholder="Type medicine name, category, or alternative..." onkeyup="filterPharmacy()" />
                 </div>
-                <div class="table-scroll-box">
+                <div class="table-scroll-box" style="max-height: 380px;">
                     <table id="docPharmTable">
                         <thead>
-                            <tr><th>Medicine</th><th>Category</th><th>Alternatives</th><th>Stock</th></tr>
+                            <tr><th>Medicine</th><th>Category</th><th>Alternatives</th><th>Stock</th><th>Action</th></tr>
                         </thead>
                         <tbody></tbody>
                     </table>
@@ -226,9 +315,11 @@
 <div id="view-NURSE" class="view-panel">
     <div class="card">
         <h2>My Assigned Patients & Daily Care Activities</h2>
-        <div class="table-scroll-box">
+        <div class="table-scroll-box" style="max-height: 480px;">
             <table id="nursePatientTable">
-                <thead><tr><th>Patient ID</th><th>Patient Name</th><th>Doctor</th><th>Care Instructions</th><th>Status</th><th>Action</th></tr></thead>
+                <thead>
+                    <tr><th>Patient ID</th><th>Patient Name</th><th>Doctor</th><th>Care Instructions</th><th>Status</th><th>Action</th></tr>
+                </thead>
                 <tbody></tbody>
             </table>
         </div>
@@ -237,21 +328,50 @@
 
 <!-- ================= PHARMACIST VIEW ================= -->
 <div id="view-PHARMACIST" class="view-panel">
+    <div class="card">
+        <h2>Unified Pharmacy Billing & Payment Desk</h2>
+        <p style="font-size:13px; color:#64748b; margin-bottom:12px;">Consolidated ledger of Doctor-Prescribed medications and direct Patient Orders pending payment.</p>
+        
+        <div class="table-scroll-box" style="max-height: 320px;">
+            <table id="pharmBillingQueueTable">
+                <thead>
+                    <tr>
+                        <th>Bill #</th>
+                        <th>Patient</th>
+                        <th>Origin / Item Source</th>
+                        <th>Medicine</th>
+                        <th>Qty</th>
+                        <th>Unit ($)</th>
+                        <th>Total ($)</th>
+                        <th>Status</th>
+                        <th>Payment Action</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
     <div class="grid">
         <div class="card">
-            <h2>Update / Add Medicine Stock</h2>
-            <input type="text" id="medName" placeholder="Medicine Name" />
-            <input type="text" id="medCategory" placeholder="Generic Category" />
-            <input type="text" id="medAlt" placeholder="Alternatives (Comma separated)" />
-            <input type="number" id="medQty" placeholder="Stock Quantity" />
-            <input type="number" id="medPrice" placeholder="Price per unit ($)" step="0.01" />
-            <button class="action" onclick="saveMedicine()">Update Inventory</button>
+            <h2>Add / Restock Medicine</h2>
+            <label>Medicine Name:</label>
+            <input type="text" id="medName" placeholder="e.g. Amoxicillin 500mg" />
+            <label>Generic Category:</label>
+            <input type="text" id="medCategory" placeholder="e.g. Antibiotic" />
+            <label>Alternatives (Comma separated):</label>
+            <input type="text" id="medAlt" placeholder="e.g. Augmentin, Mox 500" />
+            <label>Stock Quantity:</label>
+            <input type="number" id="medQty" placeholder="e.g. 100" />
+            <label>Unit Price ($):</label>
+            <input type="number" id="medPrice" placeholder="e.g. 12.50" step="0.01" />
+            <button class="action" onclick="saveMedicine()">Update Stock</button>
         </div>
         <div class="card">
-            <h2>Pharmacy Inventory Status</h2>
+            <h2>Pharmacy Inventory Stock</h2>
             <div class="table-scroll-box">
                 <table id="pharmStockTable">
-                    <thead><tr><th>Medicine</th><th>Category</th><th>Alternatives</th><th>Stock Qty</th><th>Unit Price</th></tr></thead>
+                    <thead><tr><th>Medicine</th><th>Category</th><th>Alternatives</th><th>Stock</th><th>Price</th></tr></thead>
                     <tbody></tbody>
                 </table>
             </div>
@@ -262,14 +382,55 @@
 <!-- ================= ADMIN VIEW ================= -->
 <div id="view-ADMIN" class="view-panel">
     <div class="card">
-        <h2>Admit Patient (Auto-Generates Unique ID & Password)</h2>
+        <h2>Register New Staff / User Account</h2>
+        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px;">
+            <div>
+                <label>Select Role:</label>
+                <select id="admRegRole" onchange="updateAdmIdHint()">
+                    <option value="DOCTOR">Doctor (DOC-xxx)</option>
+                    <option value="NURSE">Nurse (NUR-xxx)</option>
+                    <option value="PHARMACIST">Pharmacist (PHARM-xxx)</option>
+                    <option value="ADMIN">Admin (ADM-xxx)</option>
+                </select>
+            </div>
+            <div>
+                <label>Assigned ID / Username:</label>
+                <input type="text" id="admRegUsername" placeholder="e.g. DOC-111" />
+            </div>
+            <div>
+                <label>Full Name:</label>
+                <input type="text" id="admRegFullName" placeholder="e.g. Dr. Alan Grant" />
+            </div>
+            <div>
+                <label>Email Address:</label>
+                <input type="email" id="admRegEmail" placeholder="staff@hospital.com" />
+            </div>
+            <div>
+                <label>Contact Number:</label>
+                <input type="text" id="admRegContact" placeholder="9876543210" />
+            </div>
+            <div>
+                <label>Department / Facility Address:</label>
+                <input type="text" id="admRegAddress" placeholder="Cardiology Wing B" />
+            </div>
+            <div style="grid-column: span 3;">
+                <label>Temporary Password:</label>
+                <input type="password" id="admRegPassword" placeholder="Enter secure password" />
+            </div>
+        </div>
+        <button class="action" onclick="registerUserByAdmin()">Create Staff Account</button>
+        <p id="admRegOutput" style="margin-top:10px; font-weight:bold;"></p>
+    </div>
+
+    <div class="card">
+        <h2>Admit Patient (Auto-Generates Credentials)</h2>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
-            <input type="text" id="admPatName" placeholder="Patient Full Name" />
-            <select id="admPatGender"><option value="Male">Male</option><option value="Female">Female</option></select>
-            <input type="text" id="admPatContact" placeholder="Contact Number" />
-            <input type="text" id="admPatDisease" placeholder="Disease / Condition" />
-            <input type="text" id="admPatRoom" placeholder="Assigned Room No" />
-            <input type="text" id="admPatAddr" placeholder="Residential Address" />
+            <div><label>Patient Full Name:</label><input type="text" id="admPatName" placeholder="Full Name" /></div>
+            <div><label>Gender:</label><select id="admPatGender"><option value="Male">Male</option><option value="Female">Female</option></select></div>
+            <div><label>Contact Number:</label><input type="text" id="admPatContact" placeholder="Contact Number" /></div>
+            <div><label>Disease / Condition:</label><input type="text" id="admPatDisease" placeholder="Condition" /></div>
+            <div><label>Assigned Room No:</label><input type="text" id="admPatRoom" placeholder="Room No" /></div>
+            <div><label>Residential Address:</label><input type="text" id="admPatAddr" placeholder="Address" /></div>
         </div>
         <button class="action" onclick="admitPatientAdmin()">Generate Credentials & Admit</button>
         <p id="admPatOutput" style="margin-top:10px;font-weight:bold;"></p>
@@ -292,6 +453,9 @@
     let userId = localStorage.getItem("userId") || "PAT-1001";
     let userName = localStorage.getItem("userName") || userId;
     let allMedsCache = [];
+    
+    // Multi-medicine prescription staging array
+    let stagedPrescriptions = [];
 
     document.getElementById("roleLabel").innerText = `${userRole}: ${userId} (${userName})`;
 
@@ -332,246 +496,246 @@
     };
 
     // ==========================================
-    // PATIENT MODULE LOGIC
-    // ==========================================
-    async function initPatientView() {
-        // 1. Load active doctor list for booking
-        try {
-            const dRes = await fetch("/api/doctors");
-            const docs = await dRes.json();
-            const dSel = document.getElementById("ptDocSelect");
-            dSel.innerHTML = "";
-            docs.forEach(d => {
-                dSel.innerHTML += `<option value="${d.doctorname}">${d.doctorname} (${d.specialist})</option>`;
-            });
-        } catch(e) { console.error(e); }
-
-        // 2. Load medicines catalog for purchasing
-        try {
-            const mRes = await fetch("/api/medicines");
-            const meds = await mRes.json();
-            const mSel = document.getElementById("ptMedSelect");
-            mSel.innerHTML = "";
-            meds.forEach(m => {
-                if (m.stockQuantity > 0) {
-                    mSel.innerHTML += `<option value="${m.medicineName}">${m.medicineName} - $${m.unitPrice} (Stock: ${m.stockQuantity})</option>`;
-                }
-            });
-        } catch(e) { console.error(e); }
-
-        // 3. Load active appointments booked by this patient
-        loadPatientAppointments();
-
-        // 4. Load prescriptions issued for this patient
-        loadPatientPrescriptions();
-
-        // 5. Load past medicine purchases
-        loadPatientOrders();
-    }
-
-    async function loadPatientAppointments() {
-        try {
-            const res = await fetch("/api/appointments");
-            const apps = await res.json();
-            const tb = document.querySelector("#ptAppTable tbody");
-            tb.innerHTML = "";
-            const myApps = apps.filter(a => 
-                a.patientname && (a.patientname.toLowerCase() === userName.toLowerCase() || a.patientname.toLowerCase() === userId.toLowerCase())
-            );
-            if (myApps.length === 0) {
-                tb.innerHTML = "<tr><td colspan='4' style='text-align:center;'>No appointments scheduled.</td></tr>";
-            } else {
-                myApps.forEach(a => {
-                    tb.innerHTML += `<tr><td><b>${a.doctorappointed}</b></td><td>${a.disease}</td><td>${a.appointementdate}</td><td>${a.appointmenttime}</td></tr>`;
-                });
-            }
-        } catch(e) { console.error(e); }
-    }
-
-    async function loadPatientPrescriptions() {
-        try {
-            const res = await fetch(`/api/prescriptions/patient/${userId}`);
-            const rxs = await res.json();
-            const tb = document.querySelector("#ptRxTable tbody");
-            tb.innerHTML = "";
-            if (rxs.length === 0) {
-                tb.innerHTML = "<tr><td colspan='5' style='text-align:center;'>No prescriptions issued yet.</td></tr>";
-            } else {
-                rxs.forEach(r => {
-                    tb.innerHTML += `<tr><td><b>${r.doctorName || r.doctorId}</b></td><td>${r.medicineName}</td><td>${r.dosage}</td><td>${r.instructions || '-'}</td><td>${r.date}</td></tr>`;
-                });
-            }
-        } catch(e) { console.error(e); }
-    }
-
-    async function loadPatientOrders() {
-        try {
-            const res = await fetch(`/api/medicines/orders/${userId}`);
-            const orders = await res.json();
-            const tb = document.querySelector("#ptOrdersTable tbody");
-            tb.innerHTML = "";
-            if (orders.length === 0) {
-                tb.innerHTML = "<tr><td colspan='4' style='text-align:center;'>No medicine orders placed yet.</td></tr>";
-            } else {
-                orders.forEach(o => {
-                    tb.innerHTML += `<tr><td><b>${o.medicineName}</b></td><td>${o.quantity}</td><td>$${o.totalCost.toFixed(2)}</td><td>${o.orderDate}</td></tr>`;
-                });
-            }
-        } catch(e) { console.error(e); }
-    }
-
-    async function bookAppointment() {
-        const concern = document.getElementById("ptConcern").value.trim();
-        const doc = document.getElementById("ptDocSelect").value;
-        const date = document.getElementById("ptDate").value;
-        const time = document.getElementById("ptTime").value;
-
-        if (!concern || !date) {
-            alert("Please provide both your health concern and preferred date.");
-            return;
-        }
-
-        const payload = {
-            patientname: userName,
-            disease: concern,
-            doctorappointed: doc,
-            appointementdate: date,
-            appointmenttime: time
-        };
-
-        const res = await fetch("/api/appointments", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-        });
-
-        if (res.ok) {
-            alert("Appointment scheduled successfully!");
-            document.getElementById("ptConcern").value = "";
-            loadPatientAppointments();
-        } else {
-            alert("Failed to schedule appointment.");
-        }
-    }
-
-    async function buyMedicine() {
-        const medName = document.getElementById("ptMedSelect").value;
-        const qty = parseInt(document.getElementById("ptMedQty").value);
-
-        if (!medName || qty < 1) {
-            alert("Please select a valid medicine and quantity.");
-            return;
-        }
-
-        const payload = {
-            patientId: userId,
-            patientName: userName,
-            medicineName: medName,
-            quantity: qty
-        };
-
-        const res = await fetch("/api/medicines/purchase", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-        });
-
-        if (res.ok) {
-            alert("Medicine purchased successfully!");
-            loadPatientOrders();
-            initPatientView();
-        } else {
-            const err = await res.json();
-            alert("Order failed: " + (err.error || "Out of stock"));
-        }
-    }
-
-    // ==========================================
-    // DOCTOR MODULE LOGIC
+    // DOCTOR LOGIC WITH MULTI-PRESCRIPTION
     // ==========================================
     async function initDoctorView() {
-        // 1. Fetch Medicines
-        const pRes = await fetch("/api/medicines");
-        allMedsCache = await pRes.json();
-        renderPharmacyTable(allMedsCache);
-        
-        const rxMedSel = document.getElementById("rxMedicineSelect");
-        rxMedSel.innerHTML = "";
-        allMedsCache.forEach(m => {
-            rxMedSel.innerHTML += `<option value="${m.medicineName}">${m.medicineName} (Stock: ${m.stockQuantity})</option>`;
-        });
+        // Clear search input on start to prevent autofill bug
+        const searchInput = document.getElementById("pharmSearch");
+        if (searchInput) searchInput.value = "";
 
-        // 2. Fetch Patients for Prescription Dropdown (Filtered by doctor's appointments)
-        const [ptRes, appRes] = await Promise.all([
-            fetch("/api/patients"),
-            fetch("/api/appointments")
-        ]);
-        const allPatients = await ptRes.json();
-        const allAppointments = await appRes.json();
+        // 1. Fetch Medicines & Render Full Catalog
+        try {
+            const pRes = await fetch("/api/medicines");
+            allMedsCache = await pRes.json();
+            renderPharmacyTable(allMedsCache);
+            populateMedicineDropdown(allMedsCache);
+        } catch(e) { console.error("Error loading medicines:", e); }
 
-        const doctorAppointments = allAppointments.filter(a => 
-            (a.doctorappointed && (
-                a.doctorappointed.toLowerCase().includes(userName.toLowerCase()) ||
-                a.doctorappointed.toLowerCase().includes(userId.toLowerCase())
-            ))
-        );
+        // 2. Fetch Patients for Dropdown
+        try {
+            const [ptRes, appRes] = await Promise.all([fetch("/api/patients"), fetch("/api/appointments")]);
+            const allPatients = await ptRes.json();
+            const allAppointments = await appRes.json();
 
-        const bookedPatientNames = new Set(doctorAppointments.map(a => a.patientname.trim().toLowerCase()));
-        const bookedPatients = allPatients.filter(p => 
-            bookedPatientNames.has(p.patientname.trim().toLowerCase())
-        );
+            const doctorAppointments = allAppointments.filter(a => 
+                a.doctorappointed && (
+                    a.doctorappointed.toLowerCase().includes(userName.toLowerCase()) ||
+                    a.doctorappointed.toLowerCase().includes(userId.toLowerCase())
+                )
+            );
 
-        const rxPtSel = document.getElementById("rxPatientSelect");
-        rxPtSel.innerHTML = "<option value=''>-- Select Booked Patient --</option>";
+            const bookedNames = new Set(doctorAppointments.map(a => a.patientname.trim().toLowerCase()));
+            const bookedPatients = allPatients.filter(p => bookedNames.has(p.patientname.trim().toLowerCase()));
 
-        if (bookedPatients.length === 0) {
-            rxPtSel.innerHTML = "<option value=''>No booked patients found</option>";
-        } else {
-            bookedPatients.forEach(p => {
-                const pId = p.patientId || p.id;
-                rxPtSel.innerHTML += `<option value="${pId}" data-name="${p.patientname}">
-                    ${pId} - ${p.patientname} (${p.disease})
-                </option>`;
-            });
-        }
+            const rxPtSel = document.getElementById("rxPatientSelect");
+            rxPtSel.innerHTML = "<option value=''>-- Select Booked Patient --</option>";
+            if (bookedPatients.length === 0) {
+                rxPtSel.innerHTML = "<option value=''>No booked patients found</option>";
+            } else {
+                bookedPatients.forEach(p => {
+                    const pId = p.patientId || p.id;
+                    rxPtSel.innerHTML += `<option value="${pId}" data-name="${p.patientname}">${pId} - ${p.patientname} (${p.disease})</option>`;
+                });
+            }
+
+            // Consultations Table
+            const atb = document.querySelector("#docAppTable tbody");
+            atb.innerHTML = "";
+            if (doctorAppointments.length === 0) {
+                atb.innerHTML = "<tr><td colspan='4' style='text-align:center;'>No booked consultations yet.</td></tr>";
+            } else {
+                doctorAppointments.forEach(a => {
+                    atb.innerHTML += `<tr><td><b>${a.patientname}</b></td><td>${a.disease}</td><td>${a.appointementdate}</td><td>${a.appointmenttime}</td></tr>`;
+                });
+            }
+        } catch(e) { console.error("Error loading doctor data:", e); }
 
         // 3. Fetch Nurses
-        const nRes = await fetch("/api/nurses");
-        const nurses = await nRes.json();
-        const nSel = document.getElementById("asNurseSelect");
-        nSel.innerHTML = "";
-        nurses.forEach(n => nSel.innerHTML += `<option value="${n.nurseid}">${n.name}</option>`);
+        try {
+            const nRes = await fetch("/api/nurses");
+            const nurses = await nRes.json();
+            const nSel = document.getElementById("asNurseSelect");
+            nSel.innerHTML = "";
+            nurses.forEach((n, idx) => {
+    // If the database has 1..12, map directly to 201..212
+    let baseNum = parseInt(n.nurseid);
+    let resolvedId;
+    if (isNaN(baseNum)) {
+        resolvedId = n.nurseid;
+    } else if (baseNum < 200) {
+        resolvedId = `NUR-${200 + baseNum}`;
+    } else {
+        resolvedId = `NUR-${baseNum}`;
+    }
+    nSel.innerHTML += `<option value="${resolvedId}">${n.name} (${resolvedId})</option>`;
+});
+        } catch(e) {}
+    }
 
-        // 4. Appointments Table
-        const atb = document.querySelector("#docAppTable tbody");
-        atb.innerHTML = "";
-        if (doctorAppointments.length === 0) {
-            atb.innerHTML = "<tr><td colspan='4' style='text-align:center;'>No booked appointments yet.</td></tr>";
-        } else {
-            doctorAppointments.forEach(a => {
-                atb.innerHTML += `<tr><td><b>${a.patientname}</b></td><td>${a.disease}</td><td>${a.appointementdate}</td><td>${a.appointmenttime}</td></tr>`;
-            });
-        }
+    function populateMedicineDropdown(list) {
+        const rxMedSel = document.getElementById("rxMedicineSelect");
+        rxMedSel.innerHTML = "";
+        list.forEach(m => {
+            rxMedSel.innerHTML += `<option value="${m.medicineName}">${m.medicineName} (Stock: ${m.stockQuantity})</option>`;
+        });
     }
 
     function renderPharmacyTable(list) {
         const tbody = document.querySelector("#docPharmTable tbody");
         tbody.innerHTML = "";
+        if (!list || list.length === 0) {
+            tbody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>No medicines match the search.</td></tr>";
+            return;
+        }
         list.forEach(m => {
             tbody.innerHTML += `<tr>
                 <td><b>${m.medicineName}</b></td>
                 <td>${m.genericCategory}</td>
                 <td>${m.alternatives}</td>
                 <td><span style="color:${m.stockQuantity < 100 ? '#dc3545':'#16a34a'};font-weight:bold;">${m.stockQuantity}</span></td>
+                <td>
+                    <button type="button" onclick="quickSelectMedicine('${m.medicineName}')" style="background:#2563eb; color:#fff; border:none; padding:4px 8px; border-radius:3px; cursor:pointer; font-size:11px;">+ Select</button>
+                </td>
             </tr>`;
         });
     }
 
+    // 1. Add individual medicine to the prescription cart
+    function addMedicineToStaging() {
+        const sel = document.getElementById("rxPatientSelect");
+        if (!sel || !sel.value) {
+            alert("Please select a booked patient first.");
+            return;
+        }
+
+        const medSelect = document.getElementById("rxMedicineSelect");
+        const medName = medSelect ? medSelect.value : "";
+        const dosageInput = document.getElementById("rxDosage");
+        const notesInput = document.getElementById("rxNotes");
+
+        const dosage = dosageInput ? dosageInput.value.trim() : "";
+        const instructions = notesInput ? notesInput.value.trim() : "";
+
+        if (!medName) {
+            alert("Please pick a valid medicine from the list.");
+            return;
+        }
+
+        if (!dosage) {
+            alert("Please enter the dosage (e.g., 500mg twice daily).");
+            return;
+        }
+
+        const patientName = sel.options[sel.selectedIndex].getAttribute("data-name") || sel.options[sel.selectedIndex].text;
+
+        // Push new item into staging array
+        stagedPrescriptions.push({
+            doctorId: userId,
+            doctorName: userName,
+            patientId: sel.value,
+            patientName: patientName,
+            medicineName: medName,
+            dosage: dosage,
+            instructions: instructions || "Take as directed",
+            status: "Pending"
+        });
+
+        renderStagingTable();
+
+        // Reset input fields for the next medicine
+        if (dosageInput) dosageInput.value = "";
+        if (notesInput) notesInput.value = "";
+    }
+
+    // 2. Remove an individual staged item from the cart
+    function removeStagedItem(index) {
+        stagedPrescriptions.splice(index, 1);
+        renderStagingTable();
+    }
+
+    // 3. Render items in the staging preview table
+    function renderStagingTable() {
+        const tbody = document.querySelector("#rxStagingTable tbody");
+        const countSpan = document.getElementById("stagedCount");
+        if (countSpan) countSpan.innerText = stagedPrescriptions.length;
+
+        if (!tbody) return;
+        tbody.innerHTML = "";
+
+        if (stagedPrescriptions.length === 0) {
+            tbody.innerHTML = "<tr><td colspan='3' style='text-align:center; color:#94a3b8;'>No medicines added yet.</td></tr>";
+            return;
+        }
+
+        stagedPrescriptions.forEach((item, idx) => {
+            tbody.innerHTML += `<tr>
+                <td><b>${item.medicineName}</b></td>
+                <td>${item.dosage}</td>
+                <td><button type="button" onclick="removeStagedItem(${idx})" style="background:#dc3545; color:#fff; border:none; padding:2px 6px; border-radius:3px; cursor:pointer;">&times;</button></td>
+            </tr>`;
+        });
+    }
+
+    // 4. Submit all staged items sequentially to the verified /api/prescriptions endpoint
+    async function submitBatchPrescription() {
+        if (!stagedPrescriptions || stagedPrescriptions.length === 0) {
+            alert("Please add at least one medicine to the prescription list first.");
+            return;
+        }
+
+        const totalItems = stagedPrescriptions.length;
+        let successCount = 0;
+        let errors = [];
+
+        // Loop through each staged medicine and post it
+        for (let i = 0; i < stagedPrescriptions.length; i++) {
+            const item = stagedPrescriptions[i];
+            try {
+                const res = await fetch("/api/prescriptions", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(item)
+                });
+
+                if (res.ok) {
+                    successCount++;
+                } else {
+                    const errDetail = await res.text();
+                    errors.push(`${item.medicineName} (${res.status}: ${errDetail || res.statusText})`);
+                }
+            } catch (err) {
+                errors.push(`${item.medicineName} (Network connection error)`);
+            }
+        }
+
+        if (successCount === totalItems) {
+            alert(`Prescription successfully submitted! (${successCount} items forwarded to Patient Report & Pharmacy Desk)`);
+            stagedPrescriptions = [];
+            renderStagingTable();
+        } else if (successCount > 0) {
+            alert(`Partially submitted: ${successCount} of ${totalItems} items saved.\nErrors:\n` + errors.join("\n"));
+            stagedPrescriptions = [];
+            renderStagingTable();
+        } else {
+            alert("Failed to submit prescriptions.\nErrors:\n" + errors.join("\n"));
+        }
+    }
+
+    function quickSelectMedicine(medName) {
+        const rxMedSel = document.getElementById("rxMedicineSelect");
+        rxMedSel.value = medName;
+        document.getElementById("rxDosage").focus();
+    }
+
     function filterPharmacy() {
-        const q = document.getElementById("pharmSearch").value.toLowerCase();
+        const q = (document.getElementById("pharmSearch").value || "").trim().toLowerCase();
+        if (!q) {
+            renderPharmacyTable(allMedsCache);
+            return;
+        }
         const filtered = allMedsCache.filter(m => 
-            m.medicineName.toLowerCase().includes(q) ||
-            m.genericCategory.toLowerCase().includes(q) ||
+            (m.medicineName && m.medicineName.toLowerCase().includes(q)) ||
+            (m.genericCategory && m.genericCategory.toLowerCase().includes(q)) ||
             (m.alternatives && m.alternatives.toLowerCase().includes(q))
         );
         renderPharmacyTable(filtered);
@@ -586,125 +750,167 @@
         }
     }
 
-    async function submitPrescription() {
+    // MULTI-MEDICINE STAGING
+    function addMedicineToStaging() {
         const sel = document.getElementById("rxPatientSelect");
         if (!sel.value) {
-            alert("Please select a booked patient.");
+            alert("Please select a booked patient first.");
             return;
         }
-        const payload = {
+        const medName = document.getElementById("rxMedicineSelect").value;
+        const dosage = document.getElementById("rxDosage").value.trim();
+        const instructions = document.getElementById("rxNotes").value.trim();
+
+        if (!dosage) {
+            alert("Please specify the dosage regimen (e.g., 500mg twice daily).");
+            return;
+        }
+
+        stagedPrescriptions.push({
             doctorId: userId,
             doctorName: userName,
             patientId: sel.value,
             patientName: sel.options[sel.selectedIndex].getAttribute("data-name"),
-            medicineName: document.getElementById("rxMedicineSelect").value,
-            dosage: document.getElementById("rxDosage").value,
-            instructions: document.getElementById("rxNotes").value
-        };
-
-        const res = await fetch("/api/prescriptions", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
+            medicineName: medName,
+            dosage: dosage,
+            instructions: instructions || "Take as directed",
+            status: "Pending"
         });
 
-        if (res.ok) {
-            alert("Prescription submitted successfully!");
-            document.getElementById("rxDosage").value = "";
-            document.getElementById("rxNotes").value = "";
-        }
+        renderStagingTable();
+        document.getElementById("rxDosage").value = "";
+        document.getElementById("rxNotes").value = "";
     }
 
-    async function assignNurse() {
-        const payload = {
-            doctorId: userId,
-            patientId: document.getElementById("asPatientId").value,
-            patientName: document.getElementById("asPatientName").value,
-            nurseId: document.getElementById("asNurseSelect").value,
-            nurseName: document.getElementById("asNurseSelect").selectedOptions[0].text,
-            instructions: document.getElementById("asNotes").value
-        };
-        await fetch("/api/assignments", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(payload)
-        });
-        alert("Nurse assigned successfully!");
+    function removeStagedItem(index) {
+        stagedPrescriptions.splice(index, 1);
+        renderStagingTable();
     }
 
-    async function loadPatientHistory() {
-        const hc = document.getElementById("historyContent");
-        hc.innerHTML = "Fetching history records...";
-        
-        try {
-            const [pRes, rxRes] = await Promise.all([
-                fetch("/api/patients"),
-                fetch("/api/prescriptions")
-            ]);
-            const patients = await pRes.json();
-            const prescriptions = await rxRes.json();
-
-            hc.innerHTML = "";
-            patients.forEach(p => {
-                const pId = p.patientId || p.id;
-                const pRxs = prescriptions.filter(r => r.patientId === pId);
-                let rxHtml = pRxs.length === 0 
-                    ? "<em>No prescriptions on record.</em>" 
-                    : pRxs.map(r => `• <b>${r.medicineName}</b> (${r.dosage}) - ${r.date}`).join("<br>");
-
-                hc.innerHTML += `
-                    <div class="history-card">
-                        <h4>${p.patientname} [${pId}]</h4>
-                        <p><b>Diagnosis:</b> ${p.disease} | <b>Room:</b> ${p.roomno}</p>
-                        <p><b>Contact:</b> ${p.contact} | <b>Gender:</b> ${p.gender}</p>
-                        <div style="margin-top:6px;padding-top:6px;border-top:1px dashed #cbd5e1;">
-                            <p><b>Prescription History:</b></p>
-                            <p style="color:#0f172a;">${rxHtml}</p>
-                        </div>
-                    </div>
-                `;
-            });
-        } catch(err) {
-            hc.innerHTML = "<p style='color:red;'>Failed to load patient history.</p>";
-        }
-    }
-
-    // ==========================================
-    // NURSE & PHARMACIST MODULES
-    // ==========================================
-    async function initNurseView() {
-        const res = await fetch(`/api/assignments/nurse/${userId}`);
-        const list = await res.json();
-        const tbody = document.querySelector("#nursePatientTable tbody");
+    function renderStagingTable() {
+        const tbody = document.querySelector("#rxStagingTable tbody");
         tbody.innerHTML = "";
-        list.forEach(a => {
+        document.getElementById("stagedCount").innerText = stagedPrescriptions.length;
+
+        if (stagedPrescriptions.length === 0) {
+            tbody.innerHTML = "<tr><td colspan='3' style='text-align:center; color:#94a3b8;'>No medicines added yet.</td></tr>";
+            return;
+        }
+
+        stagedPrescriptions.forEach((item, idx) => {
             tbody.innerHTML += `<tr>
-                <td>${a.patientId}</td>
-                <td><b>${a.patientName}</b></td>
-                <td>${a.doctorId}</td>
-                <td>${a.instructions}</td>
-                <td>${a.activityStatus}</td>
-                <td><button onclick="updateNurseStatus(${a.id}, 'Completed')">Mark Completed</button></td>
+                <td><b>${item.medicineName}</b></td>
+                <td>${item.dosage}</td>
+                <td><button type="button" onclick="removeStagedItem(${idx})" style="background:#dc3545; color:#fff; border:none; padding:2px 6px; border-radius:3px; cursor:pointer;">&times;</button></td>
             </tr>`;
         });
     }
 
-    async function updateNurseStatus(id, status) {
-        await fetch(`/api/assignments/${id}/status`, {
-            method: "PATCH",
+  
+    async function assignNurse() {
+        const pId = document.getElementById("asPatientId").value.trim();
+        const pName = document.getElementById("asPatientName").value.trim();
+        const nSel = document.getElementById("asNurseSelect");
+        const notes = document.getElementById("asNotes").value.trim();
+
+        if (!pId || !pName) {
+            alert("Please provide patient details.");
+            return;
+        }
+
+        const rawNurseId = nSel.value;
+        const formattedNurseId = rawNurseId.startsWith("NUR-") ? rawNurseId : ("NUR-" + rawNurseId);
+
+        const payload = {
+            doctorId: userId,
+            patientId: pId,
+            patientName: pName,
+            nurseId: formattedNurseId,
+            nurseName: nSel.selectedOptions[0].text,
+            instructions: notes || "Monitor vitals and medication adherence",
+            activityStatus: "Assigned"
+        };
+
+        const res = await fetch("/api/assignments", {
+            method: "POST",
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({status})
+            body: JSON.stringify(payload)
         });
-        initNurseView();
+
+        if (res.ok) {
+            alert(`Nurse ${payload.nurseName} assigned successfully!`);
+            document.getElementById("asNotes").value = "";
+        }
     }
 
+    // ==========================================
+    // PHARMACIST LOGIC (PAYMENT DESK)
+    // ==========================================
     async function initPharmacistView() {
-        const res = await fetch("/api/medicines");
-        const meds = await res.json();
-        const tb = document.querySelector("#pharmStockTable tbody");
-        tb.innerHTML = "";
+        loadPharmacyBillingQueue();
+        loadPharmacyInventory();
+    }
+
+    async function loadPharmacyBillingQueue() {
+        try {
+            const res = await fetch("/api/pharmacy-bills");
+            const bills = await res.json();
+            const tb = document.querySelector("#pharmBillingQueueTable tbody");
+            tb.innerHTML = "";
+
+            if (!bills || bills.length === 0) {
+                tb.innerHTML = "<tr><td colspan='9' style='text-align:center;'>No bills queued in pharmacy.</td></tr>";
+                return;
+            }
+
+            bills.forEach(b => {
+                const isPaid = b.paymentStatus === "PAID";
+                tb.innerHTML += `<tr>
+                    <td>#${b.id}</td>
+                    <td><b>${b.patientName}</b><br><small style="color:#64748b;">${b.patientId}</small></td>
+                    <td><span class="badge ${b.itemSource.includes('PRESCRIPTION') ? 'badge-prescription':'badge-patientorder'}">${b.itemSource}</span></td>
+                    <td>${b.medicineName}</td>
+                    <td>${b.quantity}</td>
+                    <td>$${b.unitPrice.toFixed(2)}</td>
+                    <td><b>$${b.totalAmount.toFixed(2)}</b></td>
+                    <td><span class="badge ${isPaid ? 'badge-done':'badge-pending'}">${b.paymentStatus} (${b.paymentMode})</span></td>
+                    <td>
+                        ${isPaid 
+                            ? `<span style="color:#16a34a; font-weight:bold;">&#10004; Settled</span>`
+                            : `<div style="display:flex; gap:4px;">
+                                <button onclick="processBillPayment(${b.id}, 'CASH')" style="background:#16a34a; color:#fff; border:none; padding:4px 6px; font-size:11px; border-radius:3px; cursor:pointer;">Cash</button>
+                                <button onclick="processBillPayment(${b.id}, 'UPI/CARD')" style="background:#0026ff; color:#fff; border:none; padding:4px 6px; font-size:11px; border-radius:3px; cursor:pointer;">Card/UPI</button>
+                               </div>`
+                        }
+                    </td>
+                </tr>`;
+            });
+        } catch(e) { console.error(e); }
+    }
+
+    async function processBillPayment(id, mode) {
+        if (!confirm(`Confirm receipt of payment via ${mode} for Bill #${id}?`)) return;
+
+        const res = await fetch(`/api/pharmacy-bills/${id}/process-payment`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ paymentMode: mode })
+        });
+
+        if (res.ok) {
+            alert(`Payment confirmed! Inventory deducted and receipt recorded.`);
+            loadPharmacyBillingQueue();
+            loadPharmacyInventory();
+        }
+    }
+
+    async function loadPharmacyInventory() {
+        const mRes = await fetch("/api/medicines");
+        const meds = await mRes.json();
+        const mtb = document.querySelector("#pharmStockTable tbody");
+        mtb.innerHTML = "";
         meds.forEach(m => {
-            tb.innerHTML += `<tr><td>${m.medicineName}</td><td>${m.genericCategory}</td><td>${m.alternatives}</td><td>${m.stockQuantity}</td><td>$${m.unitPrice}</td></tr>`;
+            mtb.innerHTML += `<tr><td><b>${m.medicineName}</b></td><td>${m.genericCategory}</td><td>${m.alternatives}</td><td>${m.stockQuantity}</td><td>$${m.unitPrice}</td></tr>`;
         });
     }
 
@@ -721,7 +927,280 @@
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(med)
         });
-        initPharmacistView();
+        loadPharmacyInventory();
+    }
+
+    // ==========================================
+    // PATIENT LOGIC & MEDICAL REPORT
+    // ==========================================
+    async function initPatientView() {
+        document.getElementById("repDate").innerText = "Date: " + new Date().toLocaleDateString();
+        document.getElementById("repId").innerText = "Record ID: " + userId;
+
+        try {
+            const dRes = await fetch("/api/doctors");
+            const docs = await dRes.json();
+            const dSel = document.getElementById("ptDocSelect");
+            dSel.innerHTML = "";
+            docs.forEach(d => {
+                dSel.innerHTML += `<option value="${d.doctorname}">${d.doctorname} (${d.specialist})</option>`;
+            });
+        } catch(e) {}
+
+        try {
+            const mRes = await fetch("/api/medicines");
+            allMedsCache = await mRes.json();
+            const mSel = document.getElementById("ptMedSelect");
+            mSel.innerHTML = "";
+            allMedsCache.forEach(m => {
+                if (m.stockQuantity > 0) {
+                    mSel.innerHTML += `<option value="${m.medicineName}">${m.medicineName} - $${m.unitPrice} (Stock: ${m.stockQuantity})</option>`;
+                }
+            });
+        } catch(e) {}
+
+        loadPatientClinicalReport();
+        loadPatientAppointments();
+    }
+
+    async function loadPatientClinicalReport() {
+        try {
+            const [pRes, rxRes, billRes] = await Promise.all([
+                fetch("/api/patients"),
+                fetch(`/api/prescriptions/patient/${userId}`),
+                fetch(`/api/pharmacy-bills/patient/${userId}`)
+            ]);
+
+            const allPatients = await pRes.json();
+            const prescriptions = await rxRes.json();
+            const bills = await billRes.json();
+
+            const myProfile = allPatients.find(p => (p.patientId || p.id) === userId);
+            const pSec = document.getElementById("repPatientDetails");
+            if (myProfile) {
+                pSec.innerHTML = `
+                    <p><b>Full Name:</b> ${myProfile.patientname} &nbsp;|&nbsp; <b>Gender:</b> ${myProfile.gender} &nbsp;|&nbsp; <b>Contact:</b> ${myProfile.contact}</p>
+                    <p><b>Primary Diagnosis:</b> <span style="color:#0026ff;font-weight:bold;">${myProfile.disease}</span> &nbsp;|&nbsp; <b>Assigned Ward/Room:</b> ${myProfile.roomno} &nbsp;|&nbsp; <b>Address:</b> ${myProfile.address}</p>
+                `;
+            } else {
+                pSec.innerHTML = `<p><b>Patient ID:</b> ${userId} &nbsp;|&nbsp; <b>Name:</b> ${userName}</p>`;
+            }
+
+            const rxTbody = document.querySelector("#repPrescriptionTable tbody");
+            rxTbody.innerHTML = "";
+            if (!prescriptions || prescriptions.length === 0) {
+                rxTbody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>No doctor prescriptions issued yet.</td></tr>";
+            } else {
+                prescriptions.forEach(r => {
+                    rxTbody.innerHTML += `<tr>
+                        <td><b>${r.doctorName || r.doctorId}</b></td>
+                        <td>${r.medicineName}</td>
+                        <td>${r.dosage}</td>
+                        <td>${r.instructions || '-'}</td>
+                        <td>${r.date}</td>
+                    </tr>`;
+                });
+            }
+
+            const billTbody = document.querySelector("#repBillingTable tbody");
+            billTbody.innerHTML = "";
+            if (!bills || bills.length === 0) {
+                billTbody.innerHTML = "<tr><td colspan='6' style='text-align:center;'>No pharmacy orders or prescription bills recorded.</td></tr>";
+            } else {
+                bills.forEach(b => {
+                    const isPaid = b.paymentStatus === "PAID";
+                    billTbody.innerHTML += `<tr>
+                        <td><span class="badge ${b.itemSource.includes('PRESCRIPTION') ? 'badge-prescription':'badge-patientorder'}">${b.itemSource}</span></td>
+                        <td><b>${b.medicineName}</b></td>
+                        <td>${b.quantity}</td>
+                        <td>$${b.totalAmount.toFixed(2)}</td>
+                        <td><span class="badge ${isPaid ? 'badge-done':'badge-pending'}">${b.paymentStatus}</span></td>
+                        <td>${b.paymentMode}</td>
+                    </tr>`;
+                });
+            }
+        } catch(err) { console.error(err); }
+    }
+
+    async function orderMedicinePatient() {
+        const medName = document.getElementById("ptMedSelect").value;
+        const qty = parseInt(document.getElementById("ptMedQty").value);
+
+        if (!medName || qty < 1) {
+            alert("Please pick a valid medicine and quantity.");
+            return;
+        }
+
+        const payload = {
+            patientId: userId,
+            patientName: userName,
+            itemSource: "PATIENT_ORDER",
+            medicineName: medName,
+            quantity: qty
+        };
+
+        const res = await fetch("/api/pharmacy-bills/queue", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
+        if (res.ok) {
+            alert("Order sent to Pharmacist Billing Desk! Visit the counter for payment.");
+            loadPatientClinicalReport();
+        }
+    }
+
+    async function loadPatientAppointments() {
+        const res = await fetch("/api/appointments");
+        const apps = await res.json();
+        const tb = document.querySelector("#ptAppTable tbody");
+        tb.innerHTML = "";
+        const myApps = apps.filter(a => 
+            a.patientname && (a.patientname.toLowerCase() === userName.toLowerCase() || a.patientname.toLowerCase() === userId.toLowerCase())
+        );
+        if (myApps.length === 0) {
+            tb.innerHTML = "<tr><td colspan='4' style='text-align:center;'>No scheduled consultations.</td></tr>";
+        } else {
+            myApps.forEach(a => {
+                tb.innerHTML += `<tr><td><b>${a.doctorappointed}</b></td><td>${a.disease}</td><td>${a.appointementdate}</td><td>${a.appointmenttime}</td></tr>`;
+            });
+        }
+    }
+
+    async function bookAppointment() {
+        const payload = {
+            patientname: userName,
+            disease: document.getElementById("ptConcern").value.trim(),
+            doctorappointed: document.getElementById("ptDocSelect").value,
+            appointementdate: document.getElementById("ptDate").value,
+            appointmenttime: document.getElementById("ptTime").value
+        };
+        const res = await fetch("/api/appointments", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(payload)
+        });
+        if (res.ok) {
+            alert("Consultation scheduled!");
+            loadPatientAppointments();
+        }
+    }
+
+    // ==========================================
+    // NURSE LOGIC
+    // ==========================================
+    async function initNurseView() {
+        const tbody = document.querySelector("#nursePatientTable tbody");
+        tbody.innerHTML = "<tr><td colspan='6' style='text-align:center;'>Loading duties...</td></tr>";
+
+        try {
+            const res = await fetch(`/api/assignments/nurse/${userId}`);
+            const list = await res.json();
+            tbody.innerHTML = "";
+
+            if (!list || list.length === 0) {
+                tbody.innerHTML = `<tr><td colspan='6' style='text-align:center; padding:20px; color:#64748b;'>
+                    No active care duties found for <b>${userId}</b>.
+                </td></tr>`;
+                return;
+            }
+
+            list.forEach(a => {
+                const isCompleted = a.activityStatus === "Completed";
+                tbody.innerHTML += `<tr>
+                    <td><b>${a.patientId}</b></td>
+                    <td>${a.patientName}</td>
+                    <td>${a.doctorId || 'Attending Doctor'}</td>
+                    <td>${a.instructions}</td>
+                    <td><span class="badge ${isCompleted ? 'badge-done':'badge-pending'}">${a.activityStatus}</span></td>
+                    <td>
+                        ${isCompleted 
+                            ? `<span style="color:#16a34a;font-weight:bold;">&#10004; Completed</span>` 
+                            : `<button class="action" style="padding:5px 10px;font-size:12px;width:auto;" onclick="updateNurseStatus(${a.id}, 'Completed')">Mark Completed</button>`
+                        }
+                    </td>
+                </tr>`;
+            });
+        } catch(e) {
+            tbody.innerHTML = "<tr><td colspan='6' style='text-align:center;color:red;'>Failed to load assigned duties.</td></tr>";
+        }
+    }
+
+    async function updateNurseStatus(id, status) {
+        await fetch(`/api/assignments/${id}/status`, {
+            method: "PATCH",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({status})
+        });
+        initNurseView();
+    }
+
+    async function loadPatientHistory() {
+        const hc = document.getElementById("historyContent");
+        hc.innerHTML = "Loading...";
+        const [pRes, rxRes] = await Promise.all([fetch("/api/patients"), fetch("/api/prescriptions")]);
+        const patients = await pRes.json();
+        const prescriptions = await rxRes.json();
+
+        hc.innerHTML = "";
+        patients.forEach(p => {
+            const pId = p.patientId || p.id;
+            const pRxs = prescriptions.filter(r => r.patientId === pId);
+            let rxHtml = pRxs.length === 0 ? "<em>No prescriptions</em>" : pRxs.map(r => `• ${r.medicineName} (${r.dosage})`).join("<br>");
+            hc.innerHTML += `
+                <div class="history-card">
+                    <h4>${p.patientname} [${pId}]</h4>
+                    <p><b>Diagnosis:</b> ${p.disease} | <b>Room:</b> ${p.roomno}</p>
+                    <p><b>Prescriptions:</b><br>${rxHtml}</p>
+                </div>
+            `;
+        });
+    }
+
+    // ==========================================
+    // ADMIN LOGIC
+    // ==========================================
+    function updateAdmIdHint() {
+        const role = document.getElementById("admRegRole").value;
+        const uInput = document.getElementById("admRegUsername");
+        if (role === "DOCTOR") uInput.placeholder = "e.g. DOC-111";
+        else if (role === "NURSE") uInput.placeholder = "e.g. NUR-213";
+        else if (role === "PHARMACIST") uInput.placeholder = "e.g. PHARM-304";
+        else if (role === "ADMIN") uInput.placeholder = "e.g. ADM-002";
+    }
+
+    async function registerUserByAdmin() {
+        const payload = {
+            role: document.getElementById("admRegRole").value,
+            username: document.getElementById("admRegUsername").value.trim(),
+            fullName: document.getElementById("admRegFullName").value.trim(),
+            email: document.getElementById("admRegEmail").value.trim(),
+            contact: document.getElementById("admRegContact").value.trim(),
+            address: document.getElementById("admRegAddress").value.trim(),
+            password: document.getElementById("admRegPassword").value.trim()
+        };
+
+        if (!payload.username || !payload.password || !payload.fullName) {
+            alert("Please fill in Username, Password, and Full Name.");
+            return;
+        }
+
+        const res = await fetch("/api/auth/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        const out = document.getElementById("admRegOutput");
+        if (res.ok) {
+            out.style.color = "#16a34a";
+            out.innerText = `Success: Account ${payload.username} (${payload.role}) created!`;
+        } else {
+            out.style.color = "#dc3545";
+            out.innerText = `Error: ${data.error || "Failed"}`;
+        }
     }
 
     async function admitPatientAdmin() {
@@ -739,8 +1218,7 @@
             body: JSON.stringify(payload)
         });
         const created = await res.json();
-        document.getElementById("admPatOutput").innerText = 
-            `Patient Admitted! ID: ${created.patientId} | Password: ${created.password}`;
+        document.getElementById("admPatOutput").innerText = `Admitted! ID: ${created.patientId} | Pass: ${created.password}`;
     }
 </script>
 

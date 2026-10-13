@@ -3,417 +3,182 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hospital Management System | Secure Portal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Hospital Management System | Sign In</title>
     <style>
-        :root {
-            --primary: #2563eb;
-            --primary-hover: #1d4ed8;
-            --bg-page: #f1f5f9;
-            --surface: #ffffff;
-            --text-dark: #0f172a;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
-            --success: #16a34a;
-            --danger: #ef4444;
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body { 
+            background: #f1f5f9; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
         }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-page);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            color: var(--text-dark);
-        }
-
-        .header-bar {
-            background: linear-gradient(135deg, #1e3a8a, #2563eb);
-            color: white;
-            padding: 24px 32px;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
-            text-align: center;
-        }
-
-        .header-bar h1 {
-            font-size: 26px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
-
-        .header-bar p {
-            font-size: 14px;
-            opacity: 0.85;
-            margin-top: 4px;
-        }
-
-        .main-container {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 16px;
-        }
-
-        .auth-card {
-            background: var(--surface);
+        .login-card {
+            background: #ffffff;
+            width: 480px;
+            padding: 40px;
             border-radius: 16px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
-            width: 100%;
-            max-width: 540px;
-            padding: 36px;
-            border: 1px solid var(--border);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
         }
-
-        /* Role Selector Pills */
-        .role-selector-label {
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--text-muted);
-            margin-bottom: 10px;
-            display: block;
-        }
-
-        .role-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 6px;
-            margin-bottom: 24px;
+        h2 { color: #1e293b; margin-bottom: 24px; font-size: 24px; font-weight: 700; }
+        
+        .role-selector {
+            display: flex;
             background: #f8fafc;
-            padding: 6px;
+            border: 1px solid #e2e8f0;
             border-radius: 10px;
-            border: 1px solid var(--border);
+            padding: 4px;
+            margin-bottom: 24px;
+            gap: 4px;
         }
-
         .role-btn {
-            background: transparent;
+            flex: 1;
+            padding: 8px 0;
             border: none;
-            padding: 8px 4px;
-            font-size: 12px;
+            background: transparent;
+            color: #64748b;
             font-weight: 600;
-            color: var(--text-muted);
-            border-radius: 6px;
+            font-size: 13px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.2s ease;
-            text-align: center;
+            transition: all 0.2s;
         }
-
         .role-btn.active {
-            background: var(--surface);
-            color: var(--primary);
+            background: #ffffff;
+            color: #2563eb;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
-        /* View Toggle (Login vs Register) */
-        .auth-modes {
-            display: flex;
-            gap: 16px;
-            border-bottom: 2px solid var(--border);
-            margin-bottom: 24px;
-        }
-
-        .mode-tab {
-            padding: 10px 0;
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--text-muted);
-            background: none;
-            border: none;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .mode-tab.active {
-            color: var(--primary);
-        }
-
-        .mode-tab.active::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: var(--primary);
-        }
-
-        /* Forms */
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 13px;
-            font-weight: 500;
-            margin-bottom: 6px;
-            color: #334155;
-        }
-
-        .form-control {
+        label { display: block; font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 6px; }
+        .input-group { margin-bottom: 18px; }
+        input {
             width: 100%;
             padding: 12px 14px;
+            border: 1px solid #cbd5e1;
             border-radius: 8px;
-            border: 1px solid var(--border);
             font-size: 14px;
             outline: none;
             transition: border-color 0.2s;
-            background: #fafafa;
         }
+        input:focus { border-color: #2563eb; }
+        .prefix-hint { font-size: 11px; color: #94a3b8; margin-top: 4px; }
 
-        .form-control:focus {
-            border-color: var(--primary);
-            background: #ffffff;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-
-        .id-hint {
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-top: 4px;
-        }
-
-        .submit-btn {
+        .btn-submit {
             width: 100%;
-            background: var(--primary);
+            background: #2563eb;
             color: white;
             border: none;
-            padding: 13px;
-            border-radius: 8px;
+            padding: 14px;
             font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            margin-top: 8px;
-        }
-
-        .submit-btn:hover {
-            background: var(--primary-hover);
-        }
-
-        .feedback-banner {
-            margin-top: 16px;
-            padding: 12px;
+            font-weight: 700;
             border-radius: 8px;
-            font-size: 13px;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: background 0.2s;
+        }
+        .btn-submit:hover { background: #1d4ed8; }
+
+        #alertBox {
             display: none;
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-bottom: 16px;
+            font-weight: 500;
         }
-
-        .feedback-banner.error {
-            background: #fee2e2;
-            color: #b91c1c;
-            border: 1px solid #fecaca;
-            display: block;
-        }
-
-        .feedback-banner.success {
-            background: #dcfce7;
-            color: #15803d;
-            border: 1px solid #bbf7d0;
-            display: block;
-        }
+        .alert-error { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
     </style>
 </head>
 <body>
 
-    <header class="header-bar">
-        <h1>Hospital Management System</h1>
-        <p>Unified Portal for Patients, Doctors, Nurses, Pharmacists, and Administrators</p>
-    </header>
+<div class="login-card">
+    <h2>Sign In to Portal</h2>
 
-    <main class="main-container">
-        <div class="auth-card">
-            
-            <div class="auth-modes">
-                <button class="mode-tab active" id="tabLogin" onclick="switchAuthMode('login')">Sign In</button>
-                <button class="mode-tab" id="tabRegister" onclick="switchAuthMode('register')">Register New Account</button>
-            </div>
+    <div class="role-selector">
+        <button class="role-btn active" onclick="selectRole('PATIENT', this)">Patient</button>
+        <button class="role-btn" onclick="selectRole('DOCTOR', this)">Doctor</button>
+        <button class="role-btn" onclick="selectRole('NURSE', this)">Nurse</button>
+        <button class="role-btn" onclick="selectRole('PHARMACIST', this)">Pharmacy</button>
+        <button class="role-btn" onclick="selectRole('ADMIN', this)">Admin</button>
+    </div>
 
-            <!-- Role Selector -->
-            <label class="role-selector-label">Select Your Role</label>
-            <div class="role-grid">
-                <button class="role-btn active" data-role="PATIENT" onclick="selectRole('PATIENT')">Patient</button>
-                <button class="role-btn" data-role="DOCTOR" onclick="selectRole('DOCTOR')">Doctor</button>
-                <button class="role-btn" data-role="NURSE" onclick="selectRole('NURSE')">Nurse</button>
-                <button class="role-btn" data-role="PHARMACIST" onclick="selectRole('PHARMACIST')">Pharmacy</button>
-                <button class="role-btn" data-role="ADMIN" onclick="selectRole('ADMIN')">Admin</button>
-            </div>
+    <div id="alertBox"></div>
 
-            <!-- LOGIN FORM -->
-            <form id="loginForm" onsubmit="handleLogin(event)">
-                <div class="form-group">
-                    <label id="userIdLabel">Patient ID</label>
-                    <input type="text" id="loginUsername" class="form-control" placeholder="e.g. PAT-1001" required autocomplete="username">
-                    <div class="id-hint" id="idHintText">Format: Must start with PAT- (or enter assigned number)</div>
-                </div>
-
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="loginPassword" class="form-control" placeholder="Enter password" required autocomplete="current-password">
-                </div>
-
-                <button type="submit" class="submit-btn" id="loginSubmitBtn">Access Patient Portal</button>
-            </form>
-
-            <!-- REGISTRATION FORM -->
-            <form id="registerForm" onsubmit="handleRegister(event)" style="display: none;">
-                <div class="form-group">
-                    <label id="regIdLabel">Desired Patient ID</label>
-                    <input type="text" id="regId" class="form-control" placeholder="e.g. PAT-1025" required>
-                    <div class="id-hint" id="regIdHint">Doctor: DOC-xxx | Nurse: NUR-xxx | Pharm: PHARM-xxx | Patient: PAT-xxx</div>
-                </div>
-
-                <div class="form-group">
-                    <label>Full Name</label>
-                    <input type="text" id="regName" class="form-control" placeholder="Jane Doe" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Email Address</label>
-                    <input type="email" id="regEmail" class="form-control" placeholder="jane@hospital.com" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Contact Number</label>
-                    <input type="tel" id="regContact" class="form-control" placeholder="9876543210" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="regPassword" class="form-control" placeholder="Create a secure password" required>
-                </div>
-
-                <button type="submit" class="submit-btn" id="regSubmitBtn">Complete Registration</button>
-            </form>
-
-            <div id="feedbackBanner" class="feedback-banner"></div>
+    <form onsubmit="handleLogin(event)">
+        <div class="input-group">
+            <label id="idLabel">Patient ID / Username</label>
+            <input type="text" id="username" placeholder="e.g. PAT-1001" required />
+            <div id="idHint" class="prefix-hint">Format: PAT-xxxx</div>
         </div>
-    </main>
 
-    <script>
-        let currentRole = 'PATIENT';
-        let currentMode = 'login';
+        <div class="input-group">
+            <label>Password</label>
+            <input type="password" id="password" placeholder="Enter your password" required />
+        </div>
 
-        const roleConfig = {
-            PATIENT: { prefix: 'PAT-', label: 'Patient ID', placeholder: 'e.g. PAT-1001', action: 'Patient Portal' },
-            DOCTOR: { prefix: 'DOC-', label: 'Doctor ID', placeholder: 'e.g. DOC-101', action: 'Doctor Console' },
-            NURSE: { prefix: 'NUR-', label: 'Nurse ID', placeholder: 'e.g. NUR-201', action: 'Nurse Workstation' },
-            PHARMACIST: { prefix: 'PHARM-', label: 'Pharmacist ID', placeholder: 'e.g. PHARM-301', action: 'Pharmacy Inventory' },
-            ADMIN: { prefix: 'ADM-', label: 'Admin ID / Username', placeholder: 'e.g. ADM-001 or admin', action: 'Admin Portal' }
-        };
+        <button type="submit" class="btn-submit">Sign In</button>
+    </form>
+</div>
 
-        function selectRole(role) {
-            currentRole = role;
-            document.querySelectorAll('.role-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.getAttribute('data-role') === role);
+<script>
+    let currentRole = "PATIENT";
+
+    const hints = {
+        "PATIENT": { label: "Patient ID", placeholder: "e.g. PAT-1001", hint: "Format: PAT-xxxx" },
+        "DOCTOR": { label: "Doctor ID", placeholder: "e.g. DOC-101", hint: "Format: DOC-xxx" },
+        "NURSE": { label: "Nurse ID", placeholder: "e.g. NUR-201", hint: "Format: NUR-xxx" },
+        "PHARMACIST": { label: "Pharmacist ID", placeholder: "e.g. PHARM-301", hint: "Format: PHARM-xxx" },
+        "ADMIN": { label: "Admin Username", placeholder: "e.g. ADM-001", hint: "Format: ADM-xxx" }
+    };
+
+    function selectRole(role, btn) {
+        currentRole = role;
+        document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        document.getElementById("idLabel").innerText = hints[role].label;
+        document.getElementById("username").placeholder = hints[role].placeholder;
+        document.getElementById("idHint").innerText = hints[role].hint;
+        showAlert("", false);
+    }
+
+    function showAlert(msg, isError = true) {
+        const box = document.getElementById("alertBox");
+        if (!msg) { box.style.display = "none"; return; }
+        box.className = isError ? "alert-error" : "";
+        box.innerText = msg;
+        box.style.display = "block";
+    }
+
+    async function handleLogin(e) {
+        e.preventDefault();
+        showAlert("", false);
+
+        const u = document.getElementById("username").value.trim();
+        const p = document.getElementById("password").value.trim();
+
+        try {
+            const res = await fetch("/api/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username: u, password: p, role: currentRole })
             });
 
-            const cfg = roleConfig[role];
-            document.getElementById('userIdLabel').innerText = cfg.label;
-            document.getElementById('loginUsername').placeholder = cfg.placeholder;
-            document.getElementById('idHintText').innerText = `Format: ID must contain keyword '${cfg.prefix.replace('-', '').toLowerCase()}'`;
-            document.getElementById('loginSubmitBtn').innerText = `Sign In to ${cfg.action}`;
+            const data = await res.json();
 
-            // Update registration labels
-            document.getElementById('regIdLabel').innerText = `Assigned ${cfg.label}`;
-            document.getElementById('regId').placeholder = cfg.placeholder;
-            document.getElementById('regSubmitBtn').innerText = `Register as ${role}`;
-        }
-
-        function switchAuthMode(mode) {
-            currentMode = mode;
-            document.getElementById('tabLogin').classList.toggle('active', mode === 'login');
-            document.getElementById('tabRegister').classList.toggle('active', mode === 'register');
-            document.getElementById('loginForm').style.display = mode === 'login' ? 'block' : 'none';
-            document.getElementById('registerForm').style.display = mode === 'register' ? 'block' : 'none';
-            hideFeedback();
-        }
-
-        function showFeedback(message, isError) {
-            const banner = document.getElementById('feedbackBanner');
-            banner.className = 'feedback-banner ' + (isError ? 'error' : 'success');
-            banner.innerText = message;
-        }
-
-        function hideFeedback() {
-            document.getElementById('feedbackBanner').className = 'feedback-banner';
-        }
-
-        async function handleLogin(e) {
-            e.preventDefault();
-            hideFeedback();
-
-            const username = document.getElementById('loginUsername').value.trim();
-            const password = document.getElementById('loginPassword').value.trim();
-
-            try {
-                const response = await fetch('/api/auth/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password })
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    
-                    // Verify if logging in with matching role
-                    const matchedRole = (data.role || currentRole).toUpperCase();
-                    localStorage.setItem('userRole', matchedRole);
-                    localStorage.setItem('userId', data.username);
-                    localStorage.setItem('userName', data.fullName || data.username);
-
-                    showFeedback('Authentication successful. Redirecting...', false);
-                    setTimeout(() => {
-                        window.location.href = '/portal.html';
-                    }, 600);
-                } else {
-                    showFeedback('Invalid credentials or role mismatch. Please verify your ID and password.', true);
-                }
-            } catch (err) {
-                showFeedback('Unable to connect to server. Ensure Spring Boot is running on port 8080.', true);
+            if (res.ok) {
+                localStorage.setItem("userRole", data.role || currentRole);
+                localStorage.setItem("userId", data.username || u);
+                localStorage.setItem("userName", data.fullName || data.username || u);
+                window.location.href = "/portal.html";
+            } else {
+                showAlert(data.error || "Invalid username, password, or role selection.");
             }
+        } catch (err) {
+            showAlert("Unable to connect to the authentication server.");
         }
+    }
+</script>
 
-        async function handleRegister(e) {
-            e.preventDefault();
-            hideFeedback();
-
-            const payload = {
-                username: document.getElementById('regId').value.trim(),
-                fullName: document.getElementById('regName').value.trim(),
-                email: document.getElementById('regEmail').value.trim(),
-                contact: document.getElementById('regContact').value.trim(),
-                password: document.getElementById('regPassword').value.trim(),
-                role: currentRole,
-                address: 'Main Facility'
-            };
-
-            try {
-                const res = await fetch('/api/auth/register', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                if (res.ok) {
-                    showFeedback(`Account created successfully! You can now switch to "Sign In" with your ID.`, false);
-                    document.getElementById('registerForm').reset();
-                } else {
-                    const err = await res.json();
-                    showFeedback('Registration failed: ' + (err.error || 'Invalid ID prefix for selected role.'), true);
-                }
-            } catch (err) {
-                showFeedback('Network error during registration.', true);
-            }
-        }
-    </script>
 </body>
 </html>
