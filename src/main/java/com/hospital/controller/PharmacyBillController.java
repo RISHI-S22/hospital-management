@@ -33,17 +33,6 @@ public class PharmacyBillController {
         this.medicineRepository = medicineRepository;
     }
 
-    private Optional<Medicine> findMedicineByName(String medicineName) {
-        if (medicineName == null || medicineName.isBlank()) {
-            return Optional.empty();
-        }
-
-        return medicineRepository.findAll()
-                .stream()
-                .filter(m -> m.getMedicineName() != null && m.getMedicineName().equalsIgnoreCase(medicineName))
-                .findFirst();
-    }
-
     @PostMapping("/queue")
     public ResponseEntity<PharmacyBill> queueItem(@RequestBody PharmacyBill bill) {
         bill.setDate(LocalDate.now().toString());
@@ -54,13 +43,12 @@ public class PharmacyBillController {
             bill.setPaymentMode("UNPAID");
         }
 
-        // Look up unit price from medicine inventory
-        Optional<Medicine> medOpt = findMedicineByName(bill.getMedicineName());
+        Optional<Medicine> medOpt = medicineRepository.findByMedicineName(bill.getMedicineName());
         double price = medOpt.map(Medicine::getUnitPrice).orElse(10.00);
         bill.setUnitPrice(price);
         bill.setTotalAmount(price * (bill.getQuantity() <= 0 ? 1 : bill.getQuantity()));
 
-        return ResponseEntity.ok(billRepository.save(bill));
+        return ResponseEntity.ok(billRepository.saveAndFlush(bill));
     }
 
     @GetMapping
@@ -80,15 +68,14 @@ public class PharmacyBillController {
             bill.setPaymentStatus("PAID");
             bill.setPaymentMode(mode);
 
-            // Deduct inventory when payment completes
-            Optional<Medicine> medOpt = findMedicineByName(bill.getMedicineName());
+            Optional<Medicine> medOpt = medicineRepository.findByMedicineName(bill.getMedicineName());
             medOpt.ifPresent(med -> {
                 int newQty = Math.max(0, med.getStockQuantity() - bill.getQuantity());
                 med.setStockQuantity(newQty);
-                medicineRepository.save(med);
+                medicineRepository.saveAndFlush(med);
             });
 
-            billRepository.save(bill);
+            billRepository.saveAndFlush(bill);
             return ResponseEntity.ok(bill);
         }).orElse(ResponseEntity.notFound().build());
     }
